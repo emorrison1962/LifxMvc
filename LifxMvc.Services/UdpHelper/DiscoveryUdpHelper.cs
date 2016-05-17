@@ -46,7 +46,17 @@ namespace LifxMvc.Services.UdpHelper
 				{
 					sender.DontFragment = true;
 					sender.EnableBroadcast = true;
+
+					var resendWait = new ManualResetEventSlim(false);
 					sender.Send(data, data.Length, destEP);
+					resendWait.Wait(100);
+
+					sender.Send(data, data.Length, destEP);
+					resendWait.Wait(100);
+
+					sender.Send(data, data.Length, destEP);
+					resendWait.Wait(100);
+
 				}
 				this.StartListening(listenCallback, expectedCount, timeout);
 				var wait = new ManualResetEventSlim(false);

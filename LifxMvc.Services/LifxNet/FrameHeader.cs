@@ -69,7 +69,16 @@ namespace LifxNet
 			//The target device address is 8 bytes long, when using the 6 byte MAC address then left - 
 			//justify the value and zero-fill the last two bytes. A target device address of all zeroes effectively addresses all devices on the local network
 			writer.Write(this.TargetMacAddress); // target mac address - 0 means all devices
-			writer.Write(new byte[] { 0, 0, 0, 0, 0, 0 }); //reserved 1
+
+
+#warning FIXME: EXPERIMENT.
+			const string RESERVED = "LIFXV2";
+			const int RESERVED_LEN = 6;
+			var chars = ((string)RESERVED).Take(RESERVED_LEN).ToArray();
+			var bytes = Encoding.UTF8.GetBytes(chars);
+
+			writer.Write(bytes); //reserved 1
+			//writer.Write(new byte[] { 0, 0, 0, 0, 0, 0 }); //reserved 1
 
 			//The client can use acknowledgements to determine that the LIFX device has received a message. 
 			//However, when using acknowledgements to ensure reliability in an over-burdened lossy network ... 

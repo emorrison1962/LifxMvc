@@ -71,7 +71,11 @@ namespace LifxNet
 					else if (arg is byte[])
 						payload.AddRange((byte[])arg);
 					else if (arg is string)
-						payload.AddRange(Encoding.UTF8.GetBytes(((string)arg).PadRight(32).Take(32).ToArray())); //All strings are 32 bytes
+					{
+						var chars = ((string)arg).PadRight(32, (char)0).Take(32).ToArray();
+						var bytes = Encoding.UTF8.GetBytes(chars);
+						payload.AddRange(bytes); //All strings are 32 bytes
+					}
 					else
 						throw new NotSupportedException(args.GetType().FullName);
 				}

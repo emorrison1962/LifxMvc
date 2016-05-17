@@ -105,7 +105,6 @@ namespace LifxMvc.Services
 			this.Send(bulb, packet);
 		}
 
-
 		public void GetInfo(Bulb bulb)
 		{
 			var packet = new DeviceGetInfoPacket(bulb);
