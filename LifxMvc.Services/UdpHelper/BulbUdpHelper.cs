@@ -103,6 +103,7 @@ namespace LifxMvc.Services.UdpHelper
 				this.Throttle();
 				var sent = this.UdpClient.Send(data, data.Length);
 				this.LastSentTime = DateTime.Now;
+				packet.TraceSent(this.UdpClient.Client.LocalEndPoint);
 
 				Debug.Assert(sent == data.Length);
 			}
@@ -146,8 +147,9 @@ namespace LifxMvc.Services.UdpHelper
 						data = this.UdpClient.EndReceive(asyncResult, ref sender);
 						TraceData(data);
 
-						result = LifxResponseBase.Parse(data);
+						result = LifxResponseBase.Parse(data, sender);
 						responseSource = result.Source;
+						result.TraceReceived(this.UdpClient.Client.LocalEndPoint);
 					}
 				}
 				else 
@@ -190,6 +192,7 @@ namespace LifxMvc.Services.UdpHelper
 
 #endif
 		}
+
 		public void Dispose()
 		{
 			this.UdpClient.Dispose();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace LifxNet
 	/// </summary>
 	public abstract class LifxResponseBase
 	{
-		public static LifxResponseBase Parse(byte[] packet)
+		public static LifxResponseBase Parse(byte[] packet, IPEndPoint sender)
 		{
 			using (MemoryStream ms = new MemoryStream(packet))
 			{
@@ -42,11 +43,11 @@ namespace LifxNet
 				byte[] payload = null;
 				if (size > 36)
 					payload = br.ReadBytes(size - 36);
-				return LifxResponseBase.Create(header, type, source, payload);
+				return LifxResponseBase.Create(header, type, source, payload, sender);
 			}
 		}
 
-		public static LifxResponseBase Create(FrameHeader header, ResponseType type, UInt32 source, byte[] payload)
+		public static LifxResponseBase Create(FrameHeader header, ResponseType type, UInt32 source, byte[] payload, IPEndPoint sender)
 		{
 			LifxResponseBase response = null;
 			switch (type)
@@ -119,13 +120,25 @@ namespace LifxNet
 			response.Type = type;
 			response.Payload = payload;
 			response.Source = source;
+			response.IPEndPoint = sender;
 			return response;
 		}
+
 		public LifxResponseBase() { }
 		public FrameHeader Header { get; protected set; }
 		public byte[] Payload { get; protected set; }
 		public ResponseType Type { get; private set; }
 		public UInt32 Source { get; private set; }
+		public IPEndPoint IPEndPoint { get; set; }
+
+		public override string ToString()
+		{
+			var result = string.Format("Source={1}, Sequence={2} : {0}",
+					base.ToString(), 
+					this.Header.Source.ToString("X8"), 
+					this.Header.Sequence.ToString("X2"));
+			return result;
+		}
 	}
 
 

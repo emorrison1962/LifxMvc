@@ -10,8 +10,11 @@ namespace LifxNet
 {
 	public class FrameHeader
 	{
-		static UInt32 _nextIdentifier = 1;
-		UInt32 _identifier = ++_nextIdentifier;
+		static UInt32 _nextSource = 1;
+		UInt32 _source = ++_nextSource;
+
+		static byte _nextSequence = 1;
+		byte _sequence = ++_nextSequence;
 
 		public UInt32 Source;
 		public bool Tagged;
@@ -22,10 +25,18 @@ namespace LifxNet
 		public DateTime AtTime;
 		public FrameHeader(bool acknowledgeRequired = false)
 		{
-			if (0 == _identifier)
-				++_identifier;
-			Source = _identifier;
-			Sequence = 0;
+			if (0 == _source)
+			{
+				++_source;
+				++_nextSource; 
+			}
+			if (0 == _sequence)
+			{
+				++_sequence;
+				++_nextSequence;
+			}
+			Source = _source;
+			Sequence = _sequence;
 			AcknowledgeRequired = acknowledgeRequired;
 			ResponseRequired = false;
 			TargetMacAddress = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -71,14 +82,18 @@ namespace LifxNet
 			writer.Write(this.TargetMacAddress); // target mac address - 0 means all devices
 
 
-#warning FIXME: EXPERIMENT.
+#if false
+#warning FIXME: EXPERIMENT.	THIS IS WHAT THE LIFX APP POPULATES THE RESERVED BYTES WITH. DOESN'T SEEM TO AFFECT ANYTHING THOUGH.
 			const string RESERVED = "LIFXV2";
 			const int RESERVED_LEN = 6;
 			var chars = ((string)RESERVED).Take(RESERVED_LEN).ToArray();
 			var bytes = Encoding.UTF8.GetBytes(chars);
 
 			writer.Write(bytes); //reserved 1
-			//writer.Write(new byte[] { 0, 0, 0, 0, 0, 0 }); //reserved 1
+#else
+			//Let's play by the rules.
+			writer.Write(new byte[] { 0, 0, 0, 0, 0, 0 }); //reserved 1
+#endif
 
 			//The client can use acknowledgements to determine that the LIFX device has received a message. 
 			//However, when using acknowledgements to ensure reliability in an over-burdened lossy network ... 
@@ -99,7 +114,7 @@ namespace LifxNet
 			//to distinguish between different messages sent with the same source identifier in the Frame. See
 			//ack_required and res_required fields in the Frame Address.
 			writer.Write(this.Sequence);
-			#endregion Frame address
+#endregion Frame address
 
 			#region Protocol Header
 			//The at_time value should be zero for Set and Get messages sent by a client.
@@ -115,7 +130,7 @@ namespace LifxNet
 			{
 				writer.Write((UInt64)0);
 			}
-			#endregion Protocol Header
+#endregion Protocol Header
 
 
 		}

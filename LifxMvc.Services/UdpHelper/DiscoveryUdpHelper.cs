@@ -42,20 +42,22 @@ namespace LifxMvc.Services.UdpHelper
 				TraceData(data);
 				IPAddress broadcastIP = IPAddress.Broadcast;
 				IPEndPoint destEP = new IPEndPoint(broadcastIP, PORT_NO);
+				packet.IPEndPoint = destEP;
 				using (UdpClient sender = new UdpClient(PORT_NO, AddressFamily.InterNetwork))
 				{
 					sender.DontFragment = true;
 					sender.EnableBroadcast = true;
 
-					var resendWait = new ManualResetEventSlim(false);
+					//var resendWait = new ManualResetEventSlim(false);
 					sender.Send(data, data.Length, destEP);
-					resendWait.Wait(100);
+					packet.TraceSent(sender.Client.LocalEndPoint);
+					//resendWait.Wait(100);
 
-					sender.Send(data, data.Length, destEP);
-					resendWait.Wait(100);
+					//sender.Send(data, data.Length, destEP);
+					////resendWait.Wait(100);
 
-					sender.Send(data, data.Length, destEP);
-					resendWait.Wait(100);
+					//sender.Send(data, data.Length, destEP);
+					////resendWait.Wait(100);
 
 				}
 				this.StartListening(listenCallback, expectedCount, timeout);
@@ -140,12 +142,15 @@ namespace LifxMvc.Services.UdpHelper
 							{
 								byte[] data = listener.EndReceive(asyncResult, ref sender);
 								//parse the response.
-								var response = LifxResponseBase.Parse(data);
+								var response = LifxResponseBase.Parse(data, sender);
+								
 								if (_discoveryComplete)
 								{
 									//This is a random response broadcast from a bulb.
-									Debug.WriteLine(string.Format("{0}: {1}", sender.ToString(), response.ToString()));
+									//Debug.WriteLine(string.Format("{0}: {1}", sender.ToString(), response.ToString()));
 								}
+								response.TraceReceived(listener.Client.LocalEndPoint, _discoveryComplete);
+
 								if (response is DeviceStateServiceResponse)
 								{
 									//publish the response.

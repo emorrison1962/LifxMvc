@@ -23,6 +23,11 @@ namespace LifxMvc.Services
 			return response;
 		}
 
+		void SendAsync(Bulb bulb, LifxPacketBase packet) 
+		{
+			var udp = UdpHelperManager.Instance[packet.IPEndPoint];
+			udp.SendAsync(packet);
+		}
 
 		public void LightGet(Bulb bulb)
 		{
@@ -58,7 +63,7 @@ namespace LifxMvc.Services
 		{
 			var packet = new LightSetColorPacket(bulb, hsbk);
 			packet.Duration = 100;
-			this.Send(bulb, packet);
+			this.SendAsync(bulb, packet);
 
 			bulb.SetColor(hsbk);
 		}

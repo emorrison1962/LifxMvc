@@ -135,7 +135,7 @@ namespace LifxMvc.Services.Tests
 		}
 
 
-		[Ignore]
+		//[Ignore]
 		[TestMethod()]
 		public void LightSetColorTest()
 		{

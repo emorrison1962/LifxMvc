@@ -120,6 +120,15 @@ namespace LifxNet
 		}
 
 
+		public override string ToString()
+		{
+			var result = string.Format("Source={1}, Sequence={2} : {0}",
+					base.ToString(),
+					this.Header.Source.ToString("X8"),
+					this.Header.Sequence.ToString("X2"));
+			return result;
+		}
+
 
 
 	}//class
@@ -135,7 +144,7 @@ namespace LifxNet
 
 
 
-	
+
 
 
 
