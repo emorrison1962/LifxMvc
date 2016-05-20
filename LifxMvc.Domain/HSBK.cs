@@ -28,5 +28,20 @@ namespace LifxMvc.Domain
 									   //Console.Beep();
 			}
 		}
+
+		public void RotateHue(UInt16 degrees)
+		{
+			UInt16 degreeWidth = UInt16.MaxValue / 360;
+			UInt16 rotation = (UInt16)(degreeWidth * degrees);
+
+			if (0 != this.Saturation)
+			{
+				this.Hue += rotation;
+									   //Console.Beep();
+			}
+		}
+
+
+
 	}
 }

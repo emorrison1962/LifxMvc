@@ -27,6 +27,7 @@ namespace LifxNet
 		//Light messages
 		LightGet		= 101,	   //0x65
 		LightSetColor	= 102,	   //0x66
+		LightSetWaveform= 103,
 		LightGetPower	= 116,	   //0x74
 		LightSetPower	= 117,	   //0x75
 

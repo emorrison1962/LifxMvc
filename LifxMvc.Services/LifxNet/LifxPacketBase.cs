@@ -64,12 +64,16 @@ namespace LifxNet
 				{
 					if (arg is UInt16)
 						payload.AddRange(BitConverter.GetBytes((UInt16)arg));
+					else if (arg is Int16)
+						payload.AddRange(BitConverter.GetBytes((Int16)arg));
 					else if (arg is UInt32)
 						payload.AddRange(BitConverter.GetBytes((UInt32)arg));
 					else if (arg is byte)
 						payload.Add((byte)arg);
 					else if (arg is byte[])
 						payload.AddRange((byte[])arg);
+					else if (arg is Single)
+						payload.AddRange(BitConverter.GetBytes((Single)arg));
 					else if (arg is string)
 					{
 						var chars = ((string)arg).PadRight(32, (char)0).Take(32).ToArray();
@@ -77,7 +81,10 @@ namespace LifxNet
 						payload.AddRange(bytes); //All strings are 32 bytes
 					}
 					else
-						throw new NotSupportedException(args.GetType().FullName);
+					{
+						var msg = arg.GetType().FullName;
+						throw new NotSupportedException(msg);
+					}
 				}
 			}
 

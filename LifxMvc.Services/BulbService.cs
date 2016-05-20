@@ -132,7 +132,14 @@ namespace LifxMvc.Services
 			this.Send(bulb, packet);
 		}
 
+		public void LightSetWaveform(Bulb bulb, LightSetWaveformCreationContext ctx)
+		{
+			var packet = new LightSetWaveformPacket(bulb, ctx);
+			this.SendAsync(bulb, packet);
+		}
 
+
+		
 
 	}//class
 

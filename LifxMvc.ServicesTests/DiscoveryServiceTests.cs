@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using LifxMvc.Domain;
 using System.Threading;
 using LifxMvc.Services.UdpHelper;
+using LifxNet;
+using System.Diagnostics;
 
 namespace LifxMvc.Services.Tests
 {
@@ -54,6 +56,14 @@ namespace LifxMvc.Services.Tests
 			var result = svc.DiscoverAsync(EXPECTED_BULB_COUNT);
 			Bulbs = new List<Bulb>(result);
 			Bulbs.Sort(new BulbComparer());
+
+			var bulbService = new BulbService();
+			foreach (var bulb in Bulbs)
+			{
+				bulbService.LightGet(bulb);
+			}
+
+
 		}
 
 		[ClassCleanup()]
@@ -339,5 +349,26 @@ namespace LifxMvc.Services.Tests
 				BulbService.GetLocation(bulb);
 			}
 		}
+
+		[TestMethod()]
+		public void LightSetWaveformTest()
+		{
+			foreach (var bulb in Bulbs)
+			{
+				var ctx = this.CreateLightSetWaveformCreationContext(bulb);
+				Debug.WriteLine(bulb);
+				BulbService.LightSetWaveform(bulb, ctx);
+			}
+		}
+
+
+		LightSetWaveformCreationContext CreateLightSetWaveformCreationContext(Bulb bulb)
+		{
+			var hsbk = bulb.HSBK;
+			hsbk.RotateHue(180);
+			var result = new LightSetWaveformCreationContext(true, hsbk, 1000, 100, 0, WaveformEnum.Triangle);
+			return result;
+		}
+
 	}//class
 }//ns

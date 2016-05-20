@@ -45,6 +45,7 @@
     <Compile Include="DiscoveryService.cs" />
     <Compile Include="LifxNet\Constants.cs" />
     <Compile Include="LifxNet\Extensions.cs" />
+    <Compile Include="LifxNet\Packets\LightSetWaveformPacket.cs" />
     <Compile Include="LifxNet\Responses\DeviceAcknowledgementResponse.cs" />
     <Compile Include="LifxNet\Responses\DeviceEchoResponse.cs" />
     <Compile Include="LifxNet\Responses\DeviceStateGroupResponse.cs" />

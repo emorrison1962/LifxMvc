@@ -31,6 +31,9 @@ namespace LifxMvc.Domain
 		/// Bulb color temperature
 		/// </summary>
 		public UInt16 Kelvin { get; set; }
+
+		public HSBK HSBK { get { return new HSBK(this.Hue, this.Saturation, this.Brightness, this.Kelvin); } }
+
 		/// <summary>
 		/// Power state
 		/// </summary>
