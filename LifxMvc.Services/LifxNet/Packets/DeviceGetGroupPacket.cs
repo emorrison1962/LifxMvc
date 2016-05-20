@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class DeviceGetGroupPacket : LifxPacketBase<DeviceStateGroupResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.DeviceGetGroup; } }
+		override public PacketType MessageType { get { return PacketType.DeviceGetGroup; } }
 		public DeviceGetGroupPacket(Bulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;

@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class LightSetColorPacket : LifxPacketBase<LightStateResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.LightSetColor; } }
+		override public PacketType MessageType { get { return PacketType.LightSetColor; } }
 
 		public UInt16 Hue { get; private set; }
 		public UInt16 Saturation { get; private set; }

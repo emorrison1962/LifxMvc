@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class DeviceGetWifiInfoPacket : LifxPacketBase<DeviceStateWifiInfoResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.DeviceGetWifiInfo; } }
+		override public PacketType MessageType { get { return PacketType.DeviceGetWifiInfo; } }
 		public DeviceGetWifiInfoPacket(Bulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;

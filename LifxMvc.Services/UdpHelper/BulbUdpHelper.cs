@@ -96,7 +96,7 @@ namespace LifxMvc.Services.UdpHelper
 			byte[] result = null;
 			try
 			{
-				var data = packet.SerializeMessage();
+				var data = packet.Serialize();
 
 				TraceData(data);
 

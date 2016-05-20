@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class LightSetPowerPacket : LifxPacketBase<DeviceAcknowledgementResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.LightSetPower; } }
+		override public PacketType MessageType { get { return PacketType.LightSetPower; } }
 		public bool IsOn { get; private set; }
 		public UInt32 Duration { get; set; }
 

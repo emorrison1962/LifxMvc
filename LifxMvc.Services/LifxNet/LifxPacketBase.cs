@@ -30,7 +30,7 @@ namespace LifxNet
 
 		public FrameHeader Header { get; protected set; }
 		public IPEndPoint IPEndPoint { get; set; }
-		public abstract RequestType MessageType { get; }
+		public abstract PacketType MessageType { get; }
 
 		/// <summary>
 		/// ///////////////////////////////////////////////////////////
@@ -54,78 +54,66 @@ namespace LifxNet
 		}
 		#endregion
 
-		public byte[] SerializeMessage()
+		public byte[] Serialize()
+		{
+			List<byte> bytes = new List<byte>();
+
+			var payload = this.GetPayloadBytes();
+			UInt16 payloadLength = (UInt16)payload.Length;
+			var header = this.Header.GetBytes(payloadLength, this.MessageType);
+
+			using (var ms = new MemoryStream())
+			{
+				using (BinaryWriter writer = new BinaryWriter(ms))
+				{
+					writer.Write(header);
+					if (payload != null)
+					{
+						writer.Write(payload);
+					}
+					bytes.AddRange(ms.ToArray());
+				}
+			}
+
+			var result = bytes.ToArray();
+			return result;
+		}
+
+		public byte[] GetPayloadBytes()
 		{
 			object[] args = this.GetPayloadParams();
-			List<byte> payload = new List<byte>();
+			List<byte> bytes = new List<byte>();
+
 			if (args != null)
 			{
 				foreach (var arg in args)
 				{
-					if (arg is UInt16)
-						payload.AddRange(BitConverter.GetBytes((UInt16)arg));
-					else if (arg is Int16)
-						payload.AddRange(BitConverter.GetBytes((Int16)arg));
-					else if (arg is UInt32)
-						payload.AddRange(BitConverter.GetBytes((UInt32)arg));
-					else if (arg is byte)
-						payload.Add((byte)arg);
+					if (arg is byte)
+						bytes.Add((byte)arg);
 					else if (arg is byte[])
-						payload.AddRange((byte[])arg);
-					else if (arg is Single)
-						payload.AddRange(BitConverter.GetBytes((Single)arg));
+						bytes.AddRange((byte[])arg);
 					else if (arg is string)
 					{
 						var chars = ((string)arg).PadRight(32, (char)0).Take(32).ToArray();
-						var bytes = Encoding.UTF8.GetBytes(chars);
-						payload.AddRange(bytes); //All strings are 32 bytes
+						var charBytes = Encoding.UTF8.GetBytes(chars);
+						bytes.AddRange(charBytes); //All strings are 32 bytes
 					}
 					else
 					{
-						var msg = arg.GetType().FullName;
-						throw new NotSupportedException(msg);
+						bytes.AddRange(BitConverter.GetBytes((dynamic)arg));
 					}
 				}
 			}
 
-			byte[] result = SerializeMessagePayload(payload.ToArray());
+			byte[] result = bytes.ToArray();
 			return result;
 		}
-		protected byte[] SerializeMessagePayload(byte[] payload)
-		{
-			MemoryStream ms = new MemoryStream();
-			WritePacketToStream(ms, payload);
-			var result = ms.ToArray();
 
-#if false
-			System.Diagnostics.Debug.WriteLine(
-				string.Join(",", (from a in result select a.ToString("X2")).ToArray()));
-
-#endif
-			return result;
-		}
-		protected void WritePacketToStream(Stream stream, byte[] payload)
-		{
-			using (BinaryWriter writer = new BinaryWriter(stream))
-			{
-				//BinaryWriter bw = new BinaryWriter(ms);
-
-				this.Header.WriteToStream(writer, payload);
-
-				writer.Write((UInt16)this.MessageType); //packet _type
-				writer.Write((UInt16)0); //reserved
-				if (payload != null)
-					writer.Write(payload);
-
-				//writer.StoreAsync();
-			}
-		}
 
 		virtual protected object[] GetPayloadParams()
 		{
 			return null;
 		}
-
 
 		public override string ToString()
 		{
@@ -135,8 +123,6 @@ namespace LifxNet
 					this.Header.Sequence.ToString("X2"));
 			return result;
 		}
-
-
 
 	}//class
 

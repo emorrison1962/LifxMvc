@@ -77,23 +77,15 @@ namespace LifxNet
 			#endregion Frame
 
 			#region Frame address
+
 			//The target device address is 8 bytes long, when using the 6 byte MAC address then left - 
 			//justify the value and zero-fill the last two bytes. A target device address of all zeroes effectively addresses all devices on the local network
 			writer.Write(this.TargetMacAddress); // target mac address - 0 means all devices
 
 
-#if false
-#warning FIXME: EXPERIMENT.	THIS IS WHAT THE LIFX APP POPULATES THE RESERVED BYTES WITH. DOESN'T SEEM TO AFFECT ANYTHING THOUGH.
-			const string RESERVED = "LIFXV2";
-			const int RESERVED_LEN = 6;
-			var chars = ((string)RESERVED).Take(RESERVED_LEN).ToArray();
-			var bytes = Encoding.UTF8.GetBytes(chars);
-
-			writer.Write(bytes); //reserved 1
-#else
 			//Let's play by the rules.
 			writer.Write(new byte[] { 0, 0, 0, 0, 0, 0 }); //reserved 1
-#endif
+
 
 			//The client can use acknowledgements to determine that the LIFX device has received a message. 
 			//However, when using acknowledgements to ensure reliability in an over-burdened lossy network ... 
@@ -114,7 +106,8 @@ namespace LifxNet
 			//to distinguish between different messages sent with the same source identifier in the Frame. See
 			//ack_required and res_required fields in the Frame Address.
 			writer.Write(this.Sequence);
-#endregion Frame address
+			
+			#endregion Frame address
 
 			#region Protocol Header
 			//The at_time value should be zero for Set and Get messages sent by a client.
@@ -130,10 +123,163 @@ namespace LifxNet
 			{
 				writer.Write((UInt64)0);
 			}
-#endregion Protocol Header
+
+			#endregion Protocol Header
 
 
 		}
 
-	}
-}
+		public byte[] GetBytes(UInt16 payloadLength, PacketType messageType)
+		{
+			var result = this.GetBytes(payloadLength, (UInt16)messageType);
+			return result;
+		}
+
+		public byte[] GetBytes(UInt16 payloadLength, ResponseType messageType)
+		{
+			var result = this.GetBytes(payloadLength, (UInt16)messageType);
+			return result;
+		}
+
+		public byte[] GetBytes(UInt16 payloadLength, UInt16 messageType)
+		{
+			List<byte> bytes = new List<byte>();
+
+			#region Frame, 64 bits/ 8 bytes
+
+			
+			#region Packet size (2 bytes/ 16 bits)
+
+			const UInt16 FRAME_HEADER_LENGTH = 36;
+			payloadLength += FRAME_HEADER_LENGTH;
+			bytes.AddRange(BitConverter.GetBytes(payloadLength)); //length
+
+			#endregion Packet size (2 bytes/ 16 bits)
+
+			#region Origin/Tagged/Addressable/Protocol (2 bytes/ 2, 1, 1, 12 bits)
+
+			const UInt16 ORIGIN = 0x00;
+			const UInt16 PROTOCOL = 0x400;
+			const UInt16 TAGGED_BIT = 1 << 13;
+			const UInt16 ADDRESSABLE_BIT = 0x1000;
+
+			UInt16 otap = ORIGIN;
+			otap |= PROTOCOL;
+			otap |= ADDRESSABLE_BIT;
+
+			if (this.Tagged)
+				otap |= TAGGED_BIT;
+			bytes.AddRange(BitConverter.GetBytes(otap)); //protocol
+
+			#endregion Origin/Tagged/Addressable/Protocol (2 bytes/ 2, 1, 1, 12 bits)
+
+			#region Source identifier (4 bytes/ 32 bits)
+
+			//Source identifier - unique value set by the client, 
+			//used by responses. If 0, responses are broadcast instead of unicast.
+			bytes.AddRange(BitConverter.GetBytes(this.Source));
+			Debug.Assert(0 != this.Source); //DON'T BROADCAST.
+
+			#endregion Source identifier (4 bytes/ 32 bits)
+
+			
+			#endregion Frame
+
+
+			#region Frame address, 16 bytes/ 128 bits
+
+			#region Target MAC address (8 bytes)
+
+			//The target device address is 8 bytes long, when using the 6 byte MAC address then left - 
+			//justify the value and zero-fill the last two bytes. A target device address of all zeroes effectively addresses all devices on the local network
+			bytes.AddRange(this.TargetMacAddress); // target mac address - 0 means all devices
+
+			#endregion Target MAC address (8 bytes)
+
+
+			#region Reserved (6 bytes/ 48 bits)
+
+			bytes.AddRange(new byte[] { 0, 0, 0, 0, 0, 0 }); //reserved 1
+
+			#endregion Reserved (6 bytes/ 48 bits)
+
+
+			#region Reserved, ResponseRequired, AckRequired (1 byte/ 6, 1, 1 bits)
+
+			//The client can use acknowledgements to determine that the LIFX device has received a message. 
+			//However, when using acknowledgements to ensure reliability in an over-burdened lossy network ... 
+			//causing additional network packets may make the problem worse. 
+			//Client that don't need to track the updated state of a LIFX device can choose not to request a 
+			//response, which will reduce the network burden and may provide some performance advantage. In
+			//some cases, a device may choose to send a state update response independent of whether res_required is set.
+			const int RESPONSE_REQUIRED_BIT = 1;
+			const int ACK_REQUIRED_BIT = 1 << 1;
+
+			byte reserved = 0;
+
+			if (this.ResponseRequired)
+				reserved |= RESPONSE_REQUIRED_BIT;
+			if (this.AcknowledgeRequired)
+				reserved |= ACK_REQUIRED_BIT;
+
+			bytes.Add(reserved);
+
+			#endregion Reserved, ResponseRequired, AckRequired (1 byte/ 6, 1, 1 bits)
+
+
+			#region Sequence (1 byte/ 8 bits)
+
+			//The sequence number allows the client to provide a unique value, which will be included by the LIFX 
+			//device in any message that is sent in response to a message sent by the client. This allows the client
+			//to distinguish between different messages sent with the same source identifier in the Frame. See
+			//ack_required and res_required fields in the Frame Address.
+			bytes.Add(this.Sequence);
+
+			#endregion Sequence (1 byte/ 8 bits)
+
+			#endregion Frame address
+
+			
+			#region Protocol Header, 12 bytes/ 96 bits
+
+
+			#region Reserved, sort of. (8 bytes/ 64 bits)
+			//The at_time value should be zero for Set and Get messages sent by a client.
+			//For State messages sent by a device, the at_time will either be the device
+			//current time when the message was received or zero. StateColor is an example
+			//of a message that will return a non-zero at_time value
+			if (this.AtTime > DateTime.MinValue)
+			{
+				var time = this.AtTime.ToUniversalTime();
+				bytes.AddRange(BitConverter.GetBytes((UInt64)(time - new DateTime(1970, 01, 01)).TotalMilliseconds * 10)); //timestamp
+			}
+			else
+			{
+				bytes.AddRange(BitConverter.GetBytes((UInt64)0));
+			}
+
+			#endregion Reserved, sort of. (8 bytes/ 64 bits)
+
+			#region Message type (2 bytes/ 16 bits)
+
+			bytes.AddRange(BitConverter.GetBytes(messageType));
+
+			#endregion Message type (2 bytes/ 16 bits)
+
+			#region Reserved (2 bytes/ 16 bits)
+
+			bytes.AddRange(BitConverter.GetBytes((UInt16)0));
+
+			#endregion Reserved (2 bytes/ 16 bits)
+
+
+			#endregion Protocol Header
+
+
+			var result = bytes.ToArray();
+			return result;
+		}
+
+
+	}//class
+}//ns

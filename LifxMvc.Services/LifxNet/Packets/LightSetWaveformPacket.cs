@@ -98,7 +98,7 @@ namespace LifxNet
 		/// </summary>
 		public WaveformEnum Waveform { get; set; } // unsigned 8-bit integer, maps to[Waveform](#waveform) |
 
-		public override RequestType MessageType { get { return RequestType.LightSetWaveform; } }
+		public override PacketType MessageType { get { return PacketType.LightSetWaveform; } }
 
 		public LightSetWaveformPacket(Bulb bulb, LightSetWaveformCreationContext ctx) : base(bulb)
 		{

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LifxNet
 {
-	public enum RequestType : ushort
+	public enum PacketType : ushort
 	{
 		//Device requests
 		DeviceGetService	= 0x02,

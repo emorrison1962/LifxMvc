@@ -8,7 +8,7 @@ namespace LifxNet
 {
 	public class DeviceGetServicePacket : LifxPacketBase<DeviceStateServiceResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.DeviceGetService; } }
+		override public PacketType MessageType { get { return PacketType.DeviceGetService; } }
 
 		public DeviceGetServicePacket()
 			: base(null)

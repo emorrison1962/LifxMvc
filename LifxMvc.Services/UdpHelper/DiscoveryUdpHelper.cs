@@ -38,8 +38,10 @@ namespace LifxMvc.Services.UdpHelper
 		{
 			try
 			{
-				var data = packet.SerializeMessage();
-				TraceData(data);
+				var data = packet.Serialize();
+				//TraceData(data);
+
+
 				IPAddress broadcastIP = IPAddress.Broadcast;
 				IPEndPoint destEP = new IPEndPoint(broadcastIP, PORT_NO);
 				packet.IPEndPoint = destEP;
@@ -212,14 +214,14 @@ namespace LifxMvc.Services.UdpHelper
 
 		static void TraceData(byte[] data)
 		{
-#if false
+#if true
 			if (null != data)
 			{
-				System.Diagnostics.Debug.WriteLine(
-					string.Join(",", (from a in data select Convert.ToString(a, 2).PadLeft(8, '0')).ToArray()));
-
 				//System.Diagnostics.Debug.WriteLine(
-				//	string.Join(",", (from a in data select a.ToString("X2")).ToArray()));
+				//	string.Join(",", (from a in data select Convert.ToString(a, 2).PadLeft(8, '0')).ToArray()));
+
+				System.Diagnostics.Debug.WriteLine(
+					string.Join(",", (from a in data select a.ToString("X2")).ToArray()));
 			}
 
 #endif

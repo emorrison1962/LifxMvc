@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class DeviceSetLabelPacket : LifxPacketBase<DeviceAcknowledgementResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.DeviceSetLabel; } }
+		override public PacketType MessageType { get { return PacketType.DeviceSetLabel; } }
 
 		const int MAX_LENGTH = 32;
 		string _label;

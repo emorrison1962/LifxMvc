@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class LightGetPacket : LifxPacketBase<LightStateResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.LightGet; } }
+		override public PacketType MessageType { get { return PacketType.LightGet; } }
 		public LightGetPacket(Bulb bulb)
 			: base(bulb)
 		{

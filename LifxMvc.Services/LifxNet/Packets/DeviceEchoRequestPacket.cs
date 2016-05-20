@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class DeviceEchoRequestPacket : LifxPacketBase<DeviceEchoResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.DeviceEchoRequest; } }
+		override public PacketType MessageType { get { return PacketType.DeviceEchoRequest; } }
 		public DeviceEchoRequestPacket(Bulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;

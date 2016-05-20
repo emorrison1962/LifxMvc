@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class DeviceGetLabelPacket : LifxPacketBase<DeviceStateLabelResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.DeviceGetLabel; } }
+		override public PacketType MessageType { get { return PacketType.DeviceGetLabel; } }
 		public DeviceGetLabelPacket(Bulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;

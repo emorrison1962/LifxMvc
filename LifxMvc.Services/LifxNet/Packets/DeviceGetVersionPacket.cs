@@ -9,7 +9,7 @@ namespace LifxNet
 {
 	public class DeviceGetVersionPacket : LifxPacketBase<DeviceStateVersionResponse>
 	{
-		override public RequestType MessageType { get { return RequestType.DeviceGetVersion; } }
+		override public PacketType MessageType { get { return PacketType.DeviceGetVersion; } }
 
 		public DeviceGetVersionPacket(Bulb bulb)
 			: base(bulb)

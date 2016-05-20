@@ -10,7 +10,7 @@ namespace LifxNet
 	public class DeviceGetInfoPacket : LifxPacketBase<DeviceStateInfoResponse>
 
 	{
-		override public RequestType MessageType { get { return RequestType.DeviceGetInfo; } }
+		override public PacketType MessageType { get { return PacketType.DeviceGetInfo; } }
 		public DeviceGetInfoPacket(Bulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
