@@ -325,8 +325,10 @@ namespace LifxMvc.Services.Tests
 			{
 				var requested = !bulb.IsOn;
 				this.LightSetPower(bulb, requested);
-				var expected = this.LightGetPower(bulb);
-				Assert.AreEqual(requested, expected);
+
+				BulbService.LightGet(bulb);
+
+				Assert.AreEqual(requested, bulb.IsOn);
 				this.LightSetPower(bulb, !requested); // toggle back to initial state.
 			}
 

@@ -35,13 +35,13 @@ namespace LifxNet
 		public DeviceSetLabelPacket(FrameHeader header, byte[] payload)
 			: base(header)
 		{
-			_label = Encoding.UTF8.GetString(payload, 0, 32).Replace("\0", "");
+			_label = Encoding.UTF8.GetString(payload, 0, 32);
 		}
 
 
 		override protected object[] GetPayloadParams()
 		{
-			_label = _label.PadRight(MAX_LENGTH);
+			//_label = _label.PadRight(MAX_LENGTH);
 			return new object[] { _label };
 		}
 	}
