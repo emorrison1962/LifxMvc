@@ -144,7 +144,7 @@ namespace LifxMvc.Services.UdpHelper
 							{
 								byte[] data = listener.EndReceive(asyncResult, ref sender);
 								//parse the response.
-								var response = LifxResponseBase.Parse(data, sender);
+								var response = ResponseFactory.Parse(data, sender);
 								
 								if (_discoveryComplete)
 								{

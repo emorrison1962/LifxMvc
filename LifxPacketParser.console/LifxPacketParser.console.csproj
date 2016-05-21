@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{371EDA86-72D7-40F0-89DE-89DF50179144}</ProjectGuid>
+    <ProjectGuid>{BD443A6B-7C7C-4F81-9EB5-E5036E8B8D9F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleUdp.console</RootNamespace>
-    <AssemblyName>SimpleUdp.console</AssemblyName>
+    <RootNamespace>LifxPacketParser.console</RootNamespace>
+    <AssemblyName>LifxPacketParser.console</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

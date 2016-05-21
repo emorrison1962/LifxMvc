@@ -141,6 +141,9 @@ namespace LifxNet
 			return result;
 		}
 
+		public const int FRAME_HEADER_LENGTH = 36;
+		public UInt16 PacketLength { get; private set; }
+
 		public byte[] GetBytes(UInt16 payloadLength, UInt16 messageType)
 		{
 			List<byte> bytes = new List<byte>();
@@ -279,6 +282,39 @@ namespace LifxNet
 			var result = bytes.ToArray();
 			return result;
 		}
+
+
+		public static FrameHeader Parse(byte[] packet)
+		{
+			var header = new FrameHeader();
+			using (MemoryStream ms = new MemoryStream(packet))
+			{
+				BinaryReader br = new BinaryReader(ms);
+				//frame
+				header.PacketLength = br.ReadUInt16();
+				if (packet.Length != header.PacketLength || header.PacketLength < FRAME_HEADER_LENGTH)
+					throw new Exception("Invalid packet");
+				var a = br.ReadUInt16(); //origin:2, reserved:1, addressable:1, protocol:12
+				var source = br.ReadUInt32();
+				header.Source = source;
+				//frame address
+				byte[] target = br.ReadBytes(8);
+				header.TargetMacAddress = target;
+				ms.Seek(6, SeekOrigin.Current); //skip reserved
+				var b = br.ReadByte(); //reserved:6, ack_required:1, res_required:1, 
+				header.Sequence = br.ReadByte();
+
+				//protocol header
+				var nanoseconds = br.ReadUInt64();
+				header.AtTime = Constants.Epoch.AddMilliseconds(nanoseconds * 0.000001);
+				header.MessageType = br.ReadUInt16();
+				ms.Seek(2, SeekOrigin.Current); //skip reserved
+			}
+
+			return header;
+		}
+
+		public UInt16 MessageType { get; private set; }
 
 
 	}//class

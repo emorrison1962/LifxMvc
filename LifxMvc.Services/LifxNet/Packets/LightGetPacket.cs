@@ -15,5 +15,9 @@ namespace LifxNet
 		{
 			
 		}
+
+		public LightGetPacket(FrameHeader header)
+			: base(header)
+		{ }
 	}
 }

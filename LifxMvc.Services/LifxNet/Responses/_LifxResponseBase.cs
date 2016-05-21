@@ -13,43 +13,46 @@ namespace LifxNet
 	/// </summary>
 	public abstract class LifxResponseBase
 	{
+		public FrameHeader Header { get; set; }
+		public byte[] Payload { get; protected set; }
+		public ResponseType Type { get; set; }
+		UInt32 Source { get; set; }
+		public IPEndPoint IPEndPoint { get; set; }
+
+		public LifxResponseBase() { }
+
+		public override string ToString()
+		{
+			var result = string.Format("Source={1}, Sequence={2} : {0}",
+					base.ToString(), 
+					this.Header.Source.ToString("X8"), 
+					this.Header.Sequence.ToString("X2"));
+			return result;
+		}
+	}
+
+
+	static public class ResponseFactory
+	{
 		public static LifxResponseBase Parse(byte[] packet, IPEndPoint sender)
 		{
+			var header = FrameHeader.Parse(packet);
 			using (MemoryStream ms = new MemoryStream(packet))
 			{
-				var header = new FrameHeader();
 				BinaryReader br = new BinaryReader(ms);
-				//frame
-				var size = br.ReadUInt16();
-				if (packet.Length != size || size < 36)
-					throw new Exception("Invalid packet");
-				var a = br.ReadUInt16(); //origin:2, reserved:1, addressable:1, protocol:12
-				var source = br.ReadUInt32();
-				header.Source = source;
-				//frame address
-				byte[] target = br.ReadBytes(8);
-				header.TargetMacAddress = target;
-				ms.Seek(6, SeekOrigin.Current); //skip reserved
-				var b = br.ReadByte(); //reserved:6, ack_required:1, res_required:1, 
-				header.Sequence = br.ReadByte();
-
-				//protocol header
-				var nanoseconds = br.ReadUInt64();
-				header.AtTime = Constants.Epoch.AddMilliseconds(nanoseconds * 0.000001);
-				var type = (ResponseType)br.ReadUInt16();
-				ms.Seek(2, SeekOrigin.Current); //skip reserved
-
+				br.ReadBytes(FrameHeader.FRAME_HEADER_LENGTH);// Fast forward past the FrameHeader.
 
 				byte[] payload = null;
-				if (size > 36)
-					payload = br.ReadBytes(size - 36);
-				return LifxResponseBase.Create(header, type, source, payload, sender);
+				if (header.PacketLength > FrameHeader.FRAME_HEADER_LENGTH)
+					payload = br.ReadBytes(header.PacketLength - FrameHeader.FRAME_HEADER_LENGTH);
+				return ResponseFactory.Create(header, payload, sender);
 			}
 		}
 
-		public static LifxResponseBase Create(FrameHeader header, ResponseType type, UInt32 source, byte[] payload, IPEndPoint sender)
+		public static LifxResponseBase Create(FrameHeader header, byte[] payload, IPEndPoint sender)
 		{
 			LifxResponseBase response = null;
+			ResponseType type = (ResponseType)header.MessageType;
 			switch (type)
 			{
 				case ResponseType.DeviceAcknowledgement:
@@ -118,44 +121,11 @@ namespace LifxNet
 			}
 			response.Header = header;
 			response.Type = type;
-			response.Payload = payload;
-			response.Source = source;
 			response.IPEndPoint = sender;
 			return response;
 		}
 
-		public LifxResponseBase() { }
-		public FrameHeader Header { get; protected set; }
-		public byte[] Payload { get; protected set; }
-		public ResponseType Type { get; private set; }
-		public UInt32 Source { get; private set; }
-		public IPEndPoint IPEndPoint { get; set; }
-
-		public override string ToString()
-		{
-			var result = string.Format("Source={1}, Sequence={2} : {0}",
-					base.ToString(), 
-					this.Header.Source.ToString("X8"), 
-					this.Header.Sequence.ToString("X2"));
-			return result;
-		}
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
 }//ns

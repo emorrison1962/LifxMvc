@@ -20,6 +20,13 @@ namespace LifxNet
 			this.Header.AcknowledgeRequired = true;
 		}
 
+		public LightSetPowerPacket(FrameHeader header, byte[] payload)
+			: base(header)
+		{
+			IsOn = BitConverter.ToUInt16(payload, 0) > 0;
+			Duration = BitConverter.ToUInt32(payload, 2);
+		}
+
 		override protected object[] GetPayloadParams()
 		{
 			UInt16 level = this.IsOn ? UInt16.MaxValue : (UInt16)0U;

@@ -14,5 +14,10 @@ namespace LifxNet
 		{
 			this.Header.ResponseRequired = true;
 		}
+
+		public DeviceGetGroupPacket(FrameHeader header)
+			: base(header)
+		{ }
+
 	}
 }

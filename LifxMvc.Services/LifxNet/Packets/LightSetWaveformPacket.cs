@@ -112,6 +112,26 @@ namespace LifxNet
 			this.Waveform = ctx.Waveform;
 		}
 
+		public LightSetWaveformPacket(FrameHeader header, byte[] payload)
+			: base(header)
+		{
+			this.Reserved = payload[0];
+			this.Transient = payload[1] > 0;
+
+			var h = BitConverter.ToUInt16(payload, 2);
+			var s = BitConverter.ToUInt16(payload, 4);
+			var b = BitConverter.ToUInt16(payload, 6);
+			var k = BitConverter.ToUInt16(payload, 8);
+			this.Color = new HSBK(h, s, b, k);
+
+			this.Period = BitConverter.ToUInt16(payload, 10);
+			this.Cycles = BitConverter.ToSingle(payload, 12);
+			this.DutyCycle = BitConverter.ToInt16(payload, 14);
+			this.Waveform = (WaveformEnum)payload[16];
+		}
+
+
+
 		override protected object[] GetPayloadParams()
 		{
 			var result = new object[]

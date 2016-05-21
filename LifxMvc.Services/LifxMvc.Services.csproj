@@ -46,6 +46,7 @@
     <Compile Include="LifxNet\Constants.cs" />
     <Compile Include="LifxNet\Extensions.cs" />
     <Compile Include="LifxNet\Packets\LightSetWaveformPacket.cs" />
+    <Compile Include="LifxNet\Packets\UnknownPacket.cs" />
     <Compile Include="LifxNet\Responses\DeviceAcknowledgementResponse.cs" />
     <Compile Include="LifxNet\Responses\DeviceEchoResponse.cs" />
     <Compile Include="LifxNet\Responses\DeviceStateGroupResponse.cs" />
@@ -77,8 +78,8 @@
     <Compile Include="LifxNet\Packets\DeviceSetLabelPacket.cs" />
     <Compile Include="LifxNet\Packets\DeviceSetPowerPacket.cs" />
     <Compile Include="LifxNet\FrameHeader.cs" />
-    <Compile Include="LifxNet\LifxPacketBase.cs" />
-    <Compile Include="LifxNet\LifxResponseBase.cs" />
+    <Compile Include="LifxNet\Packets\_LifxPacketBase.cs" />
+    <Compile Include="LifxNet\Responses\_LifxResponseBase.cs" />
     <Compile Include="LifxNet\Packets\LightGetPacket.cs" />
     <Compile Include="LifxNet\Packets\LightGetPowerPacket.cs" />
     <Compile Include="LifxNet\Packets\LightSetColorPacket.cs" />

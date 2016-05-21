@@ -15,5 +15,9 @@ namespace LifxNet
 			this.Header.ResponseRequired = true;
 		}
 
+		public DeviceGetLabelPacket(FrameHeader header)
+			: base(header)
+		{ }
+
 	}
 }

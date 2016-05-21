@@ -1,6 +1,7 @@
 ﻿using LifxMvc.Domain;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,13 @@ namespace LifxNet
 			this.Header.AcknowledgeRequired = true;
 			this.Label = label;
 		}
+
+		public DeviceSetLabelPacket(FrameHeader header, byte[] payload)
+			: base(header)
+		{
+			_label = Encoding.UTF8.GetString(payload, 0, 32).Replace("\0", "");
+		}
+
 
 		override protected object[] GetPayloadParams()
 		{

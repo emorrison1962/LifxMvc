@@ -10,10 +10,17 @@ namespace LifxNet
 	public class DeviceEchoRequestPacket : LifxPacketBase<DeviceEchoResponse>
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceEchoRequest; } }
+
 		public DeviceEchoRequestPacket(Bulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
 		}
+
+		public DeviceEchoRequestPacket(FrameHeader header)
+			: base(header)
+		{
+		}
+
 		override protected object[] GetPayloadParams()
 		{
 			var payload = new byte[64];

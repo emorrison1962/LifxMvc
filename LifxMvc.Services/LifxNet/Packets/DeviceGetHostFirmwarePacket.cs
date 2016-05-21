@@ -14,5 +14,9 @@ namespace LifxNet
 		{
 			this.Header.ResponseRequired = true;
 		}
+
+		public DeviceGetHostFirmwarePacket(FrameHeader header)
+			: base(header)
+		{ }
 	}
 }

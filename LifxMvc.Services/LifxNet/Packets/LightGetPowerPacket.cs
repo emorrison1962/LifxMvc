@@ -14,5 +14,9 @@ namespace LifxNet
 		{
 			this.Header.ResponseRequired = true;
 		}
+
+		public LightGetPowerPacket(FrameHeader header)
+			: base(header)
+		{ }
 	}
 }

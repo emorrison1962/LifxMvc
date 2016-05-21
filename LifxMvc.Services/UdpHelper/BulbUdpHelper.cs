@@ -147,8 +147,7 @@ namespace LifxMvc.Services.UdpHelper
 						data = this.UdpClient.EndReceive(asyncResult, ref sender);
 						TraceData(data);
 
-						result = LifxResponseBase.Parse(data, sender);
-						responseSource = result.Source;
+						result = ResponseFactory.Parse(data, sender);
 						result.TraceReceived(this.UdpClient.Client.LocalEndPoint);
 					}
 				}

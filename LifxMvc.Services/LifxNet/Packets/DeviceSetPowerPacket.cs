@@ -1,6 +1,7 @@
 ﻿using LifxMvc.Domain;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,12 @@ namespace LifxNet
 
 			this.IsOn = isOn;
 			this.Header.AcknowledgeRequired = true;
+		}
+
+		public DeviceSetPowerPacket(FrameHeader header, byte[] payload)
+			: base(header)
+		{
+			IsOn = BitConverter.ToUInt16(payload, 0) > 0;
 		}
 
 		override protected object[] GetPayloadParams()

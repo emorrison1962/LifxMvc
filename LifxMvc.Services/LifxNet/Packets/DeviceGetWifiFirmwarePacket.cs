@@ -14,5 +14,9 @@ namespace LifxNet
 		{
 			this.Header.ResponseRequired = true;
 		}
+
+		public DeviceGetWifiFirmwarePacket(FrameHeader header)
+			: base(header)
+		{ }
 	}
 }
