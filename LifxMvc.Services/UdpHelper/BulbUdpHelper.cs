@@ -133,6 +133,7 @@ namespace LifxMvc.Services.UdpHelper
 			LifxResponseBase result = null;
 
 			uint responseSource = 0;
+			byte responseSequence = 0;
 			while (responseSource < frameSource)//Compare sources in order to match the packet to the response.
 			{
 				result = null;
@@ -148,6 +149,8 @@ namespace LifxMvc.Services.UdpHelper
 						TraceData(data);
 
 						result = ResponseFactory.Parse(data, sender);
+						responseSource = result.Source;
+						responseSequence = result.Sequence;
 						result.TraceReceived(this.UdpClient.Client.LocalEndPoint);
 					}
 				}

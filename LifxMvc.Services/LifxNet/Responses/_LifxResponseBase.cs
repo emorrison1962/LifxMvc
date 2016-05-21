@@ -16,7 +16,8 @@ namespace LifxNet
 		public FrameHeader Header { get; set; }
 		public byte[] Payload { get; protected set; }
 		public ResponseType Type { get; set; }
-		UInt32 Source { get; set; }
+		public UInt32 Source { get { return Header.Source; } }
+		public byte Sequence { get { return Header.Sequence; } }
 		public IPEndPoint IPEndPoint { get; set; }
 
 		public LifxResponseBase() { }

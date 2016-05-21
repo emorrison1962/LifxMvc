@@ -57,11 +57,11 @@ namespace LifxMvc.Services.Tests
 			Bulbs = new List<Bulb>(result);
 			Bulbs.Sort(new BulbComparer());
 
-			var bulbService = new BulbService();
-			foreach (var bulb in Bulbs)
-			{
-				bulbService.LightGet(bulb);
-			}
+			//var bulbService = new BulbService();
+			//foreach (var bulb in Bulbs)
+			//{
+			//	bulbService.LightGet(bulb);
+			//}
 
 
 		}
@@ -145,7 +145,7 @@ namespace LifxMvc.Services.Tests
 		}
 
 
-		//[Ignore]
+		[Ignore]
 		[TestMethod()]
 		public void LightSetColorTest()
 		{
@@ -326,8 +326,8 @@ namespace LifxMvc.Services.Tests
 				var requested = !bulb.IsOn;
 				this.LightSetPower(bulb, requested);
 				var expected = this.LightGetPower(bulb);
-				//Assert.AreEqual(requested, expected);
-				//this.LightSetPower(bulb, !requested); // toggle back to initial state.
+				Assert.AreEqual(requested, expected);
+				this.LightSetPower(bulb, !requested); // toggle back to initial state.
 			}
 
 		}
@@ -366,7 +366,7 @@ namespace LifxMvc.Services.Tests
 		{
 			var hsbk = bulb.HSBK;
 			hsbk.RotateHue(180);
-			var result = new LightSetWaveformCreationContext(true, hsbk, 1000, 100, 0, WaveformEnum.Triangle);
+			var result = new LightSetWaveformCreationContext(true, hsbk, 250, 100, 0, WaveformEnum.HalfSine);
 			return result;
 		}
 

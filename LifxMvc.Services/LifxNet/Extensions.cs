@@ -23,8 +23,10 @@ namespace LifxNet
 
 		static public void TraceReceived(this LifxResponseBase response, EndPoint localEndPoint, bool unexpectedResponse = false)
 		{
+			if (response is LightStateResponse)
+				new object();
 
-			var mac = string.Format("MacAddress={0}:{1}:{2}:{3}:{4}:{5}",
+			var mac = string.Format(" : MacAddress={0}:{1}:{2}:{3}:{4}:{5}",
 				response.Header.TargetMacAddress[0].ToString("X2"),
 				response.Header.TargetMacAddress[1].ToString("X2"),
 				response.Header.TargetMacAddress[2].ToString("X2"),
