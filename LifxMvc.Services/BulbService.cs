@@ -130,6 +130,7 @@ namespace LifxMvc.Services
 		{
 			var packet = new LightSetPowerPacket(bulb, power);
 			this.Send(bulb, packet);
+			bulb.IsOn = power;
 		}
 
 		public void LightSetWaveform(Bulb bulb, LightSetWaveformCreationContext ctx)

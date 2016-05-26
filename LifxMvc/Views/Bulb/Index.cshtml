@@ -1,105 +1,110 @@
 ﻿@model IEnumerable<LifxMvc.Domain.Bulb>
 
 @{
-    ViewBag.Title = "Index";
+	ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+	@Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Group)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Hue)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Saturation)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Brightness)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Kelvin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsOn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Label)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Location)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Service)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastSeen)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Vendor)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Product)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Version)
-        </th>
-        <th></th>
-    </tr>
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.Group)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Hue)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Saturation)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Brightness)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Kelvin)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.IsOn)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Label)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Location)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Service)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.LastSeen)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Vendor)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Product)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Version)
+		</th>
+		<th></th>
+	</tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Group)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Hue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Saturation)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Brightness)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Kelvin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Label)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Location)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Service)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastSeen)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Vendor)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Product)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Version)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.BulbId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.BulbId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.BulbId })
-        </td>
-    </tr>
+	<tr>
+		<td>
+			@Html.DisplayFor(modelItem => item.Group)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Hue)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Saturation)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Brightness)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Kelvin)
+		</td>
+		<td>
+
+			@Html.ActionLink(item.IsOn ? "On" : "Off",
+				"TogglePower", 
+				new { item.BulbId }, 
+				item.IsOn? new { @class="btn btn-sm btn-info"} : new { @class = "btn btn-sm btn-danger" }) 
+
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Label)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Location)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Service)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.LastSeen)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Vendor)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Product)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Version)
+		</td>
+		<td>
+			@Html.ActionLink("Edit", "Edit", new { id=item.BulbId }) |
+			@Html.ActionLink("Details", "Details", new { id=item.BulbId }) |
+			@Html.ActionLink("Delete", "Delete", new { id=item.BulbId })
+		</td>
+	</tr>
 }
 
 </table>

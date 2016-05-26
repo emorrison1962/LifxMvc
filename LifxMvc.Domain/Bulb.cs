@@ -10,6 +10,7 @@ namespace LifxMvc.Domain
 {
 	public class Bulb
 	{
+		static int _nextBulbId = 0;
 		public int BulbId { get; private set; }
 		public Color Color { get; set; }
 
@@ -89,7 +90,7 @@ namespace LifxMvc.Domain
 		{
 			TargetMacAddress = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-			BulbId = int.MaxValue;
+			BulbId = ++_nextBulbId;
 			Color = Color.Black;
 			Group = null;
 			Hue = UInt16.MaxValue;
