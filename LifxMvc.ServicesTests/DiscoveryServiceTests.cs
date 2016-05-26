@@ -40,6 +40,8 @@ namespace LifxMvc.Services.Tests
 
 		#endregion
 
+		const int EXECUTE_N_TIMES = 256;
+
 
 		#region Setup/ teardown
 
@@ -135,6 +137,7 @@ namespace LifxMvc.Services.Tests
 			var count = Bulbs.Where(x => null == x.Label).Count();
 			//Assert.AreEqual(expectedCount, count);
 
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
 			foreach (var bulb in Bulbs)
 			{
 				BulbService.LightGet(bulb);
@@ -172,7 +175,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void DeviceGetVersionTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.DeviceGetVersion(bulb);
 
@@ -185,7 +189,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void GetHostInfoTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.GetHostInfo(bulb);
 
@@ -198,7 +203,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void GetHostFirmwareTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.GetHostFirmware(bulb);
 
@@ -210,7 +216,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void GetWifiInfoTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.GetWifiInfo(bulb);
 
@@ -223,7 +230,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void GetWifiFirmwareTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.GetWifiFirmware(bulb);
 
@@ -235,7 +243,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void GetLabelTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.GetLabel(bulb);
 
@@ -246,7 +255,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void SetLabelTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				var oldLabel = (bulb.Label ?? string.Empty).Trim();
 				var testLabel = "THIS IS A TEST";
@@ -264,7 +274,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void GetInfoTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.GetInfo(bulb);
 
@@ -277,7 +288,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void EchoRequestTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.EchoRequest(bulb);
 			}
@@ -287,7 +299,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void DeviceGetPowerTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				var result = BulbService.DeviceGetPower(bulb);
 				Assert.AreEqual(result, bulb.IsOn);
@@ -298,7 +311,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void DeviceSetPowerTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				var requested = !bulb.IsOn;
 				this.DeviceSetPower(bulb, requested);
@@ -311,7 +325,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void LightGetPowerTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				var power = BulbService.LightGetPower(bulb);
 				Assert.AreEqual(power, bulb.IsOn);
@@ -321,7 +336,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void LightSetPowerTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				var requested = !bulb.IsOn;
 				this.LightSetPower(bulb, requested);
@@ -337,7 +353,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void GetGroupTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.GetGroup(bulb);
 			}
@@ -346,7 +363,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void GetLocationTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				BulbService.GetLocation(bulb);
 			}
@@ -355,7 +373,8 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void LightSetWaveformTest()
 		{
-			foreach (var bulb in Bulbs)
+			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
+				foreach (var bulb in Bulbs)
 			{
 				var ctx = this.CreateLightSetWaveformCreationContext(bulb);
 				Debug.WriteLine(bulb);

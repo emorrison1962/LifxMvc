@@ -13,6 +13,9 @@ namespace LifxMvc.Services.UdpHelper
 {
 	public class BulbUdpHelper : IDisposable
 	{
+		const int MAX_TX_PER_SECOND = 1000 / 10;
+		const int MAX_RETRIES = 5;
+
 		bool IsAvailable
 		{
 			get
@@ -28,18 +31,17 @@ namespace LifxMvc.Services.UdpHelper
 			}
 		}
 
+		DateTime LastSentTime { get; set; }
+		UdpClient UdpClient { get; set; }
+		ManualResetEventSlim StopListeningEvent { get; set; }
+		ManualResetEventSlim IsAvailableEvent { get; set; }
+
 		public BulbUdpHelper(IPEndPoint ep)
 		{
 			this.StopListeningEvent = new ManualResetEventSlim(false);
 			this.IsAvailableEvent = new ManualResetEventSlim(true);
 			this.UdpClient = this.CreateUdpClient(ep);
 		}
-
-
-		DateTime LastSentTime { get; set; }
-		UdpClient UdpClient { get; set; }
-		ManualResetEventSlim StopListeningEvent { get; set; }
-		ManualResetEventSlim IsAvailableEvent { get; set; }
 
 		UdpClient CreateUdpClient(IPEndPoint ep)
 		{
@@ -64,7 +66,6 @@ namespace LifxMvc.Services.UdpHelper
 			task.Start();
 		}
 
-		const int MAX_RETRIES = 5;
 		public R Send<R>(LifxPacketBase<R> packet, int retries = 0)
 			where R : LifxResponseBase
 		{
@@ -117,7 +118,6 @@ namespace LifxMvc.Services.UdpHelper
 
 		void Throttle()
 		{
-			const int MAX_TX_PER_SECOND = 1000 / 20;
 			var ts = DateTime.Now - this.LastSentTime;
 			if (ts.Milliseconds < MAX_TX_PER_SECOND)
 			{

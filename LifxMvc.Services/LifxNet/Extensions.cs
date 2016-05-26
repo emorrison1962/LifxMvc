@@ -13,7 +13,7 @@ namespace LifxNet
 	{
 		static public void TraceSent(this LifxPacketBase packet, EndPoint localEndPoint)
 		{
-			var msg = string.Format("{0} > {1}: {2}",
+			var msg = string.Format("{0} -> {1}: {2}",
 				localEndPoint.ToString().PadRight(18),
 				packet.IPEndPoint.ToString().PadRight(18), 
 				packet
@@ -34,13 +34,13 @@ namespace LifxNet
 				response.Header.TargetMacAddress[4].ToString("X2"),
 				response.Header.TargetMacAddress[5].ToString("X2"));
 
-			var msg = string.Format("{0} < {1}: {2}{3}{4}{5}",
+			var msg = string.Format("{0} <- {1}: {2}{3}{4}{5}",
 				localEndPoint.ToString().PadRight(18),
 				response.IPEndPoint.ToString().PadRight(18),
 				unexpectedResponse ? "***" : string.Empty,
 				response,
-				unexpectedResponse ? "***" : string.Empty, 
-				mac
+				unexpectedResponse ? "***" : string.Empty,
+				unexpectedResponse ? mac : string.Empty
 				);
 
 			Debug.WriteLine(msg);
