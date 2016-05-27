@@ -34,7 +34,7 @@ namespace LifxMvc.Services.UdpHelper
 		}
 
 		bool _discoveryComplete = false;
-		public void BroadcastAndListen(LifxPacketBase packet, Action<DiscoveryContext> listenCallback, int expectedCount, int timeout)
+		public void BroadcastAndListen(LifxPacketBase packet, int expectedCount, int timeout)
 		{
 			try
 			{
@@ -62,7 +62,7 @@ namespace LifxMvc.Services.UdpHelper
 					////resendWait.Wait(100);
 
 				}
-				this.StartListening(listenCallback, expectedCount, timeout);
+				this.StartListening(expectedCount, timeout);
 				var wait = new ManualResetEventSlim(false);
 				wait.Wait(timeout);
 #warning FIXME:
@@ -77,17 +77,11 @@ namespace LifxMvc.Services.UdpHelper
 			}
 		}
 
-		public void StartListening(Action<DiscoveryContext> listenCallback, int expectedCount, int timeout)
+		public void StartListening(int expectedCount, int timeout)
 		{
 			this.StopListeningEvent.Reset();
-			//var action = new Action(delegate()
-			//{
-			//	this.Listen(listenCallback, expectedCount, timeout);
-			//});
-			//this.ListeningTask = new Task(action);
-			//this.ListeningTask.Start();
 
-			var ctx = new ListenContext(listenCallback, expectedCount, timeout);
+			var ctx = new ListenContext(expectedCount, timeout);
 			var listenProc = new Thread(this.Listen);
 			listenProc.Start(ctx);
 		}
@@ -99,13 +93,11 @@ namespace LifxMvc.Services.UdpHelper
 
 		class ListenContext
 		{
-			public Action<DiscoveryContext> ListenCallback { get; set; }
 			public int ExpectedCount { get; set; }
 			public int Timeout { get; set; }
 
-			public ListenContext(Action<DiscoveryContext> listenCallback, int expectedCount, int timeout)
+			public ListenContext(int expectedCount, int timeout)
 			{
-				this.ListenCallback = listenCallback;
 				this.ExpectedCount = expectedCount;
 				this.Timeout = timeout;
 			}
@@ -115,7 +107,6 @@ namespace LifxMvc.Services.UdpHelper
 			var listenCtx = ob as ListenContext;
 			int timeout = listenCtx.Timeout;
 			int expectedCount = listenCtx.ExpectedCount;
-			var listenCallback = listenCtx.ListenCallback;
 			_discoveryComplete = false;
 
 
@@ -164,22 +155,6 @@ namespace LifxMvc.Services.UdpHelper
 											_discoveryComplete = true;
 									}
 
-//									if (null != listenCallback)
-//									{
-//										var ctx = new DiscoveryContext(sender, response as DeviceStateServiceResponse, expectedCount);
-//										if (null != this.DeviceDiscovered)
-//											this.DeviceDiscovered(this, new DiscoveryEventArgs(ctx));
-
-//										try
-//										{
-//											listenCallback(ctx);
-//										}
-//										catch(Exception ex)
-//										{ }
-//#warning FIXME:
-//										//if (ctx.CancelDiscovery)
-//										//	this.StopListening();
-//									}
 								}
 							}
 						}
@@ -205,12 +180,6 @@ namespace LifxMvc.Services.UdpHelper
 			var client = new UdpClient(PORT_NO);
 			return client;
 		}
-
-		public class DiscoveryCallbackContext
-		{
-			public Action<object, byte[], IPEndPoint> Callback { get; private set; }
-		}
-
 
 		static void TraceData(byte[] data)
 		{

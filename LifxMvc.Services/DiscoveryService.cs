@@ -18,6 +18,8 @@ namespace LifxMvc.Services
 		List<Bulb> Bulbs { get; set; }
 		ManualResetEventSlim Wait { get; set; }
 
+
+
 		public List<Bulb> DiscoverAsync(int expectedCount)
 		{
 			this.Bulbs = new List<Bulb>();
@@ -27,14 +29,13 @@ namespace LifxMvc.Services
 			udp.DeviceDiscovered += Udp_DeviceDiscovered;
 
 			this.Wait = new ManualResetEventSlim(false);
-			var sw = Stopwatch.StartNew();
-			udp.BroadcastAndListen(packet, this.DiscoveryCallback, expectedCount, 10 * 1000);
-			sw.Stop();
-			Debug.WriteLine(sw.ElapsedMilliseconds);
+			this._sw = Stopwatch.StartNew();
+			udp.BroadcastAndListen(packet, expectedCount, 10 * 1000);
 			var result = this.Bulbs;
 			return result;
 		}
 
+		Stopwatch _sw;
 		private void Udp_DeviceDiscovered(object sender, DiscoveryUdpHelper.DiscoveryEventArgs e)
 		{
 			var ctx = e.DiscoveryContext;
@@ -49,35 +50,19 @@ namespace LifxMvc.Services
 					LastSeen = DateTime.UtcNow
 				};
 
+				var bulbSvc = new BulbService();
+				bulbSvc.Initialize(bulb);
+
 				this.Bulbs.Add(bulb);
 				Debug.WriteLine(Bulbs.Count);
 				if (this.Bulbs.Count == ctx.ExpectedCount)
 				{
+					_sw.Stop();
+					Debug.WriteLine(_sw.ElapsedMilliseconds);
+
+
 					var udp = sender as DiscoveryUdpHelper;
 					udp.DeviceDiscovered -= this.Udp_DeviceDiscovered;
-					ctx.CancelDiscovery = true;
-					this.Wait.Set();
-				}
-			}
-		}
-
-		void DiscoveryCallback(DiscoveryContext ctx)
-		{
-			if (null == this.Bulbs.FirstOrDefault(x => x.IPEndPoint.ToString() == ctx.Sender.ToString()))
-			{
-				var bulb = new Bulb()
-				{
-					IPEndPoint = ctx.Sender,
-					Service = ctx.Response.Service,
-					Port = ctx.Response.Port,
-					TargetMacAddress = ctx.Response.TargetMacAddress,
-					LastSeen = DateTime.UtcNow
-				};
-
-				this.Bulbs.Add(bulb);
-				Debug.WriteLine(Bulbs.Count);
-				if (this.Bulbs.Count == ctx.ExpectedCount)
-				{
 					ctx.CancelDiscovery = true;
 					this.Wait.Set();
 				}

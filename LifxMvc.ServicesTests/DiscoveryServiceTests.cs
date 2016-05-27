@@ -48,7 +48,7 @@ namespace LifxMvc.Services.Tests
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext context)
 		{
-			GetBulbs();
+			//GetBulbs();
 		}
 
 		static void GetBulbs()
@@ -126,7 +126,7 @@ namespace LifxMvc.Services.Tests
 		[TestMethod()]
 		public void DiscoveryTest()
 		{
-			//GetBulbs();
+			GetBulbs();
 			Assert.AreEqual(EXPECTED_BULB_COUNT, Bulbs.Count);
 		}
 
@@ -356,7 +356,7 @@ namespace LifxMvc.Services.Tests
 			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
 				foreach (var bulb in Bulbs)
 			{
-				BulbService.GetGroup(bulb);
+				BulbService.DeviceGetGroup(bulb);
 			}
 		}
 
@@ -366,7 +366,7 @@ namespace LifxMvc.Services.Tests
 			for (int n = 0; n < EXECUTE_N_TIMES; ++n)
 				foreach (var bulb in Bulbs)
 			{
-				BulbService.GetLocation(bulb);
+				BulbService.DeviceGetLocation(bulb);
 			}
 		}
 

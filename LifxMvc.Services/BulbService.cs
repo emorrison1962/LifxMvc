@@ -29,11 +29,32 @@ namespace LifxMvc.Services
 			udp.SendAsync(packet);
 		}
 
+
+		public void Initialize(Bulb bulb)
+		{
+			this.LightGet(bulb);
+			this.DeviceGetGroup(bulb);
+			this.DeviceGetLocation(bulb);
+		}
+
 		public void LightGet(Bulb bulb)
 		{
 			var packet = new LightGetPacket(bulb);
 			this.Send(bulb, packet);
 		}
+
+		public void DeviceGetGroup(Bulb bulb)
+		{
+			var packet = new DeviceGetGroupPacket(bulb);
+			this.Send(bulb, packet);
+		}
+		public void DeviceGetLocation(Bulb bulb)
+		{
+			var packet = new DeviceGetLocationPacket(bulb);
+			this.Send(bulb, packet);
+		}
+
+
 
 		public bool DeviceGetPower(Bulb bulb)
 		{
@@ -96,17 +117,6 @@ namespace LifxMvc.Services
 		public void SetLabel(Bulb bulb, string label)
 		{
 			var packet = new DeviceSetLabelPacket(bulb, label);
-			this.Send(bulb, packet);
-		}
-
-		public void GetGroup(Bulb bulb)
-		{
-			var packet = new DeviceGetGroupPacket(bulb);
-			this.Send(bulb, packet);
-		}
-		public void GetLocation(Bulb bulb)
-		{
-			var packet = new DeviceGetLocationPacket(bulb);
 			this.Send(bulb, packet);
 		}
 
