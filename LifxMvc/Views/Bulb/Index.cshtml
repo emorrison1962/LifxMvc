@@ -12,7 +12,16 @@
 <table class="table">
 	<tr>
 		<th>
+			@Html.DisplayNameFor(model => model.Location)
+		</th>
+		<th>
 			@Html.DisplayNameFor(model => model.Group)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Label)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.IsOn)
 		</th>
 		<th>
 			@Html.DisplayNameFor(model => model.Hue)
@@ -27,28 +36,10 @@
 			@Html.DisplayNameFor(model => model.Kelvin)
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.IsOn)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Label)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Location)
-		</th>
-		<th>
 			@Html.DisplayNameFor(model => model.Service)
 		</th>
 		<th>
 			@Html.DisplayNameFor(model => model.LastSeen)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Vendor)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Product)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Version)
 		</th>
 		<th></th>
 	</tr>
@@ -56,7 +47,21 @@
 @foreach (var item in Model) {
 	<tr>
 		<td>
+			@Html.DisplayFor(modelItem => item.Location)
+		</td>
+		<td>
 			@Html.DisplayFor(modelItem => item.Group)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Label)
+		</td>
+		<td>
+
+			@Html.ActionLink(item.IsOn ? "On" : "Off",
+				"TogglePower",
+				new { item.BulbId },
+				item.IsOn ? new { @class = "btn btn-sm btn-info" } : new { @class = "btn btn-sm btn-danger" })
+
 		</td>
 		<td>
 			@Html.DisplayFor(modelItem => item.Hue)
@@ -71,33 +76,10 @@
 			@Html.DisplayFor(modelItem => item.Kelvin)
 		</td>
 		<td>
-
-			@Html.ActionLink(item.IsOn ? "On" : "Off",
-				"TogglePower", 
-				new { item.BulbId }, 
-				item.IsOn? new { @class="btn btn-sm btn-info"} : new { @class = "btn btn-sm btn-danger" }) 
-
-		</td>
-		<td>
-			@Html.DisplayFor(modelItem => item.Label)
-		</td>
-		<td>
-			@Html.DisplayFor(modelItem => item.Location)
-		</td>
-		<td>
 			@Html.DisplayFor(modelItem => item.Service)
 		</td>
 		<td>
 			@Html.DisplayFor(modelItem => item.LastSeen)
-		</td>
-		<td>
-			@Html.DisplayFor(modelItem => item.Vendor)
-		</td>
-		<td>
-			@Html.DisplayFor(modelItem => item.Product)
-		</td>
-		<td>
-			@Html.DisplayFor(modelItem => item.Version)
 		</td>
 		<td>
 			@Html.ActionLink("Edit", "Edit", new { id=item.BulbId }) |

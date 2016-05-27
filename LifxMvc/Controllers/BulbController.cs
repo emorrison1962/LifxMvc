@@ -25,15 +25,27 @@ namespace LifxMvc.Controllers
 			this.CacheService = cacheSvc;
 		}
 
+		class BulbComparer : IComparer<Bulb>
+		{
+			public int Compare(Bulb x, Bulb y)
+			{
+				var result = (x.Group ?? "").CompareTo((y.Group ?? ""));
+				if (0 == result)
+				{
+					result = (x.Label ?? "").CompareTo((y.Label ?? ""));
+				}
+
+				return result;
+			}
+		}
+
 		List<Bulb> GetBulbs()
 		{
 			List<Bulb> bulbs = new List<Bulb>();
 			using (var svc = new DiscoveryService())
 			{
 				bulbs = svc.DiscoverAsync(8);
-
-				var bulbSvc = new BulbService();
-				bulbs.ForEach(x => bulbSvc.LightGet(x));
+				bulbs.Sort(new BulbComparer());
 			}
 			return bulbs;
 		}
