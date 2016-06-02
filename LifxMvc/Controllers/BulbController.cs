@@ -67,13 +67,45 @@ namespace LifxMvc.Controllers
 			return View(bulbs);
 		}
 
-		//[HttpPost]
 		public ActionResult TogglePower(int bulbId)
 		{
 			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
 
 			var svc = new BulbService();
 			svc.LightSetPower(bulb, !bulb.IsOn);
+			return RedirectToAction("Index");
+		}
+
+		public ActionResult TogglePowerAll()
+		{
+			var isOn = this.Bulbs.Where(x => x.IsOn).Count() > 0;
+
+			var svc = new BulbService();
+			foreach (var bulb in Bulbs)
+			{
+				svc.LightSetPower(bulb, !isOn);
+			}
+			return RedirectToAction("Index");
+		}
+
+		public ActionResult TogglePowerGroup(string group)
+		{
+			var bulbs = this.Bulbs.Where(x => x.Group == group);
+			var isOn = bulbs.Where(x => x.IsOn).Count() > 0;
+			
+			var svc = new BulbService();
+			foreach (var bulb in bulbs)
+			{
+				svc.LightSetPower(bulb, !isOn);
+			}
+
+			return RedirectToAction("Index");
+		}
+
+		public ActionResult Discover()
+		{
+			this.CacheService.Remove(BULBS);
+			var unused = this.Bulbs;
 			return RedirectToAction("Index");
 		}
 

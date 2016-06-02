@@ -13,9 +13,18 @@ public class InMemoryCache : ICacheService
 		}
 		return item;
 	}
+
+	public void Remove(string cacheKey) 
+	{
+		if (MemoryCache.Default.Contains(cacheKey))
+		{
+			MemoryCache.Default.Remove(cacheKey);
+		}
+	}
 }
 
 public interface ICacheService
 {
 	T GetOrSet<T>(string cacheKey, Func<T> getItemCallback) where T : class;
+	void Remove(string cacheKey);
 }

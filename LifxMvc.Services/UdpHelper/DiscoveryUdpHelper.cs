@@ -65,8 +65,8 @@ namespace LifxMvc.Services.UdpHelper
 				this.StartListening(expectedCount, timeout);
 				var wait = new ManualResetEventSlim(false);
 				wait.Wait(timeout);
-#warning FIXME:
-				//this.StopListening();
+
+				this.StopListening();
 				_discoveryComplete = true;
 
 			}
