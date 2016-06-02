@@ -1,4 +1,5 @@
 ﻿using LifxMvc.Domain;
+using LifxMvc.Models;
 using LifxMvc.Services;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,13 @@ namespace LifxMvc.Controllers
 		public ActionResult Index()
 		{
 			var bulbs = this.Bulbs;
+			var vm = new BulbsViewModel(bulbs);
+			return View(vm.Groups);
+		}
+
+		public ActionResult old_Index()
+		{
+			var bulbs = this.Bulbs;
 			return View(bulbs);
 		}
 
@@ -88,9 +96,9 @@ namespace LifxMvc.Controllers
 			return RedirectToAction("Index");
 		}
 
-		public ActionResult TogglePowerGroup(string group)
+		public ActionResult TogglePowerGroup(string name)
 		{
-			var bulbs = this.Bulbs.Where(x => x.Group == group);
+			var bulbs = this.Bulbs.Where(x => x.Group == name);
 			var isOn = bulbs.Where(x => x.IsOn).Count() > 0;
 			
 			var svc = new BulbService();

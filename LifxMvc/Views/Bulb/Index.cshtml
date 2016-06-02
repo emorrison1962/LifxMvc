@@ -1,105 +1,107 @@
-﻿@model IEnumerable<LifxMvc.Domain.Bulb>
+﻿@model IEnumerable<LifxMvc.Models.GroupViewModel>
 
 @{
-	ViewBag.Title = "Bulb List";
+	ViewBag.Title = "Index";
 }
 
-
-
-<h2>Bulbs</h2>
-
+<h2>Index</h2>
 
 <p>
-	<a href="@Url.Action("Discover", "Bulb")" class="btn btn-sm btn-default aria-label="Discover Bulbs"">
-		<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-	</a>
-
-
-	@{
-		var areAnyOn = 0 < Model.Where(x => x.IsOn).Count();
-		var masterColor = string.Format("color:{0}", areAnyOn ? "red" : "gray");
-	}
-
-	<a href="@Url.Action("TogglePowerAll", "Bulb")" class="btn btn-sm btn-default aria-label=" Toggle Power on all Bulbs"">
-		<span class="glyphicon glyphicon-off" aria-hidden="true" style="@masterColor"></span>
-	</a>
-
-
-	@Html.ActionLink(0 < Model.Where(x => x.IsOn).Count() ? "On" : "Off",
-			"TogglePowerAll",
-			null,
-			@areAnyOn ? new { @class = "btn btn-sm btn-info" } : new { @class = "btn btn-sm btn-danger" })
+	@Html.ActionLink("Create New", "Create")
 </p>
-
-
 <table class="table">
 	<tr>
 		<th>
-			@Html.DisplayNameFor(model => model.Group)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Label)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Hue)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Saturation)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Brightness)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Kelvin)
+			@Html.DisplayNameFor(model => model.Name)
 		</th>
 		<th></th>
 	</tr>
 
-	@foreach (var item in Model)
-	{
+@foreach (var item in Model)
+{
 	<tr>
 		<td>
-			@helper GetGroupGlyphicon(string group)
+			@helper GetGroupGlyphicon(LifxMvc.Models.GroupViewModel group)
 			{
-				var groupIsOn = Model.Where(x => x.IsOn && x.Group == group).Count() > 0;
-
+				var groupIsOn = @group.Bulbs.Where(x => x.IsOn).Count() > 0;
 				var groupColor = string.Format("color:{0}", groupIsOn ? "red" : "gray");
-					<span class="glyphicon glyphicon-off" aria-hidden="true" style="@groupColor"></span>
+				<span class="glyphicon glyphicon-off" aria-hidden="true" style="@groupColor"></span>
 			}
 
-			<a href="@Url.Action("TogglePowerGroup", "Bulb", new { item.Group })" class="btn btn-sm btn-default aria-label=" Toggle Power on this Group"">
-				@GetGroupGlyphicon(item.Group)
-			</a>
-			@Html.DisplayFor(modelItem => item.Group)
-		</td>
-		<td>
-			@helper GetBulbGlyphicon(bool isOn)
-			{
-				var bulbColor = string.Format("color:{0}", isOn ? "red" : "gray");
-				<span class="glyphicon glyphicon-off" aria-hidden="true" style="@bulbColor"></span>
-			}
 
-			<a href="@Url.Action("TogglePower", "Bulb", new { item.BulbId })" class="btn btn-sm btn-default aria-label=" Toggle Power on this Bulb"">
-				@GetBulbGlyphicon(item.IsOn)
+			<a href="@Url.Action("TogglePowerGroup", "Bulb", new { item.Name })" class="btn btn-sm btn-default aria-label=" Toggle Power on this Group"">
+				@GetGroupGlyphicon(item)
 			</a>
-			@Html.DisplayFor(modelItem => item.Label)
+			@Html.DisplayFor(modelItem => item.Name)
 		</td>
 		<td>
-			@Html.DisplayFor(modelItem => item.Hue)
+			<table class="table">
+				<tr>
+					<th>
+						Label
+						@*@Html.DisplayNameFor(model => model.Label)*@
+					</th>
+					<th>
+						Hue
+						@*@Html.DisplayNameFor(model => model.Hue)*@
+					</th>
+					<th>
+						Saturation
+						@*@Html.DisplayNameFor(model => model.Saturation)*@
+					</th>
+					<th>
+						Brightness
+						@*@Html.DisplayNameFor(model => model.Brightness)*@
+					</th>
+					<th>
+						Kelvin
+						@*@Html.DisplayNameFor(model => model.Kelvin)*@
+					</th>
+					<th></th>
+				</tr>
+
+				@foreach (var bulb in item.Bulbs)
+				{
+					<tr>
+						<td>
+							@helper GetBulbGlyphicon(bool isOn)
+							{
+								var bulbColor = string.Format("color:{0}", isOn ? "red" : "gray");
+								<span class="glyphicon glyphicon-off" aria-hidden="true" style="@bulbColor"></span>
+							}
+
+							<a href="@Url.Action("TogglePower", "Bulb", new { bulb.BulbId })" class="btn btn-sm btn-default aria-label=" Toggle Power on this Bulb"">
+								@GetBulbGlyphicon(bulb.IsOn)
+							</a>
+							@Html.DisplayFor(modelItem => bulb.Label)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => bulb.Hue)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => bulb.Saturation)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => bulb.Brightness)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => bulb.Kelvin)
+						</td>
+						<td>
+							@Html.ActionLink("Edit", "Edit", new { id = bulb.BulbId }) |
+							@Html.ActionLink("Details", "Details", new { id = bulb.BulbId }) |
+							@Html.ActionLink("Delete", "Delete", new { id = bulb.BulbId })
+						</td>
+					</tr>
+				}
+
+			</table>
+
 		</td>
 		<td>
-			@Html.DisplayFor(modelItem => item.Saturation)
-		</td>
-		<td>
-			@Html.DisplayFor(modelItem => item.Brightness)
-		</td>
-		<td>
-			@Html.DisplayFor(modelItem => item.Kelvin)
-		</td>
-		<td>
-			@Html.ActionLink("Edit", "Edit", new { id=item.BulbId }) |
-			@Html.ActionLink("Details", "Details", new { id=item.BulbId }) |
-			@Html.ActionLink("Delete", "Delete", new { id=item.BulbId })
+			@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+			@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+			@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
 		</td>
 	</tr>
 }
