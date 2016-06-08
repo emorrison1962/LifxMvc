@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Caching;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace LifxMvc.Controllers
@@ -56,7 +57,17 @@ namespace LifxMvc.Controllers
 		{
 			var bulbs = this.Bulbs;
 			var vm = new BulbsViewModel(bulbs);
+			//var vm = new BulbsViewModel();
 			return View(vm.Groups);
+		}
+
+		public JsonResult IndexJson()
+		{
+			var bulbs = this.Bulbs;
+			var vm = new BulbsViewModel(bulbs);
+
+			var result = Json(vm, JsonRequestBehavior.AllowGet);
+			return result;
 		}
 
 		public ActionResult old_Index()
@@ -65,24 +76,13 @@ namespace LifxMvc.Controllers
 			return View(bulbs);
 		}
 
-		public ActionResult SetPower()
+		public ActionResult Discover()
 		{
-			var bulbs = this.Bulbs;
-			var svc = new BulbService();
-			var bulb = bulbs[0];
-			svc.LightSetPower(bulb, !bulb.IsOn);
-
-			return View(bulbs);
-		}
-
-		public ActionResult TogglePower(int bulbId)
-		{
-			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
-
-			var svc = new BulbService();
-			svc.LightSetPower(bulb, !bulb.IsOn);
+			this.CacheService.Remove(BULBS);
+			var unused = this.Bulbs;
 			return RedirectToAction("Index");
 		}
+
 
 		public ActionResult TogglePowerAll()
 		{
@@ -110,11 +110,56 @@ namespace LifxMvc.Controllers
 			return RedirectToAction("Index");
 		}
 
-		public ActionResult Discover()
+		public ActionResult TogglePowerBulb(int bulbId)
 		{
-			this.CacheService.Remove(BULBS);
-			var unused = this.Bulbs;
+			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
+
+			var svc = new BulbService();
+			svc.LightSetPower(bulb, !bulb.IsOn);
 			return RedirectToAction("Index");
+		}
+
+		public JsonResult TogglePowerAllJson()
+		{
+			var isOn = this.Bulbs.Where(x => x.IsOn).Count() > 0;
+
+			var svc = new BulbService();
+			foreach (var bulb in Bulbs)
+			{
+				svc.LightSetPower(bulb, !isOn);
+			}
+
+			var vm = new BulbsViewModel(this.Bulbs);
+			var result = Json(vm, JsonRequestBehavior.AllowGet);
+			return result;
+		}
+
+		public JsonResult TogglePowerGroupJson(string name)
+		{
+			var bulbs = this.Bulbs.Where(x => x.Group == name);
+			var isOn = bulbs.Where(x => x.IsOn).Count() > 0;
+
+			var svc = new BulbService();
+			foreach (var bulb in bulbs)
+			{
+				svc.LightSetPower(bulb, !isOn);
+			}
+
+			var vm = new BulbsViewModel(this.Bulbs);
+			var result = Json(vm, JsonRequestBehavior.AllowGet);
+			return result;
+		}
+
+		public JsonResult TogglePowerBulbJson(int bulbId)
+		{
+			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
+
+			var svc = new BulbService();
+			svc.LightSetPower(bulb, !bulb.IsOn);
+
+			var vm = new BulbsViewModel(this.Bulbs);
+			var result = Json(vm, JsonRequestBehavior.AllowGet);
+			return result;
 		}
 
 

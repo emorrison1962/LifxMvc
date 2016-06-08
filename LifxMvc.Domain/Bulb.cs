@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LifxMvc.Domain
 {
-	public class Bulb
+	public class Bulb : IBulb
 	{
 		static int _nextBulbId = 0;
 		public int BulbId { get; private set; }
