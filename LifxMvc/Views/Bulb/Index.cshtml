@@ -16,11 +16,12 @@
 			Master Power
 		</div>
 
-		<table id="groupsTable" class="table">
+		<table id="groupsTable" class="table table-bordered">
 			<tr>
 				<th>
 					Group
 				</th>
+				<th>Bulbs</th>
 				<th></th>
 			</tr>
 
@@ -33,64 +34,66 @@
 				</td>
 
 				<td>
-					<table id="bulbsTable" class="table">
-						<tr>
-							<th>Label</th>
-							<th>Hue</th>
-							<th>Saturation</th>
-							<th>Brightness</th>
-							<th>Kelvin</th>
-							<th></th>
-						</tr>
+					<div class="well well-sm">
+						<table id="bulbsTable" class="table table-bordered">
+							<tr>
+								<th>Label</th>
+								<th>Hue</th>
+								<th>Saturation</th>
+								<th>Brightness</th>
+								<th>Kelvin</th>
+								<th></th>
+							</tr>
 
-						<tr ng-repeat="bulb in group.Bulbs">
-							<td>
-								<a class="btn btn-sm btn-default aria-label=" Toggle Power on this Bulb""
-								   ng-click="togglePowerBulb(bulb.BulbId)">
-									<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: bulb.IsOn ? 'red' : 'gray' }"></span>
-								</a>
+							<tr ng-repeat="bulb in group.Bulbs">
+								<td>
+									<a class="btn btn-sm btn-default aria-label=" Toggle Power on this Bulb""
+									   ng-click="togglePowerBulb(bulb.BulbId)">
+										<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: bulb.IsOn ? 'red' : 'gray' }"></span>
+									</a>
 
-								{{ bulb.Label }}
-							</td>
-							<td>
-								{{ bulb.Hue }}
+									{{ bulb.Label }}
+								</td>
+								<td>
+									{{ bulb.Hue }}
 
-							</td>
-							<td>
-								{{ bulb.Saturation }}
-							</td>
-							<td>
-								{{ bulb.Brightness }}
-							</td>
-							<td>
-								{{ bulb.Kelvin }}
-							</td>
-							<td>
-								Bulb Edit, Details, Delete
-								@*@Html.ActionLink("Edit", "Edit", new { id = bulb.BulbId }) |
-									@Html.ActionLink("Details", "Details", new { id = bulb.BulbId }) |
-									@Html.ActionLink("Delete", "Delete", new { id = bulb.BulbId })*@
-							</td>
-						</tr>
+								</td>
+								<td>
+									{{ bulb.Saturation }}
+								</td>
+								<td>
+									{{ bulb.Brightness }}
+								</td>
+								<td>
+									{{ bulb.Kelvin }}
+								</td>
+								<td>
+									Bulb Edit, Details, Delete
+									@*@Html.ActionLink("Edit", "Edit", new { id = bulb.BulbId }) |
+						@Html.ActionLink("Details", "Details", new { id = bulb.BulbId }) |
+						@Html.ActionLink("Delete", "Delete", new { id = bulb.BulbId })*@
+								</td>
+							</tr>
 
-					</table>
+						</table>
+					</div>
 
 				</td>
-				<td>
-					Group Edit, Details, Delete
-					@*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-						@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-						@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-				</td>
-			</tr>
+	<td>
+		Group Edit, Details, Delete
+		@*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+			@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+			@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+	</td>
+	</tr>
 
-		</table>
+	</table>
 
-		<spectrum-colorpicker ng-model="mycolor" ></spectrum-colorpicker>
-		<div>
-			<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: {{mycolor}} }"></span>
-		</div>
+	<spectrum-colorpicker ng-model="mycolor"></spectrum-colorpicker>
+	<div>
+		<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: {{mycolor}} }"></span>
 	</div>
+</div>
 </div>
 
 
