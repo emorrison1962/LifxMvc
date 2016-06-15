@@ -10,8 +10,8 @@
 		<div>
 
 
-			<a class="btn btn-sm btn-default aria-label=" Toggle Power on this Bulb"" ng-click="togglePowerAll()">
-				<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: areAnyOn() ? 'red' : 'gray' }"></span>
+			<a class="btn btn-sm btn-default aria-label='Toggle Power on this Bulb" ng-click="togglePowerAll()">
+				<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: areAnyOn() ? 'white' : 'gray' }"></span>
 			</a>
 			Master Power
 		</div>
@@ -27,8 +27,8 @@
 
 			<tr ng-repeat="group in groups">
 				<td>
-					<a class="btn btn-sm btn-default aria-label=" Toggle Power on this Bulb"" ng-click="togglePowerGroup(group)">
-						<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: isGroupOn(group) ? 'red' : 'gray' }"></span>
+					<a class="btn btn-sm btn-default aria-label='Toggle Power on this Bulb'" ng-click="togglePowerGroup(group)">
+						<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: isGroupOn(group) ? 'white' : 'gray' }"></span>
 					</a>
 					{{ group.Name }}
 				</td>
@@ -47,7 +47,7 @@
 
 							<tr ng-repeat="bulb in group.Bulbs">
 								<td>
-									<a class="btn btn-sm btn-default aria-label=" Toggle Power on this Bulb""
+									<a class="btn btn-sm btn-default aria-label='Toggle Power on this Bulb'"
 									   ng-click="togglePowerBulb(bulb.BulbId)">
 										<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: bulb.IsOn ? 'white' : 'gray' }"></span>
 									</a>
