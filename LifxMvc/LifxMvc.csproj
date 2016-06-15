@@ -160,9 +160,11 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\colorpicker.css" />
+    <Content Include="Content\colorpicker.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Scripts\angular-spectrum-colorpicker.js" />
-    <Content Include="Scripts\angular-spectrum-colorpicker.min.js" />
+    <Content Include="Scripts\bootstrap-colorpicker-module.js" />
+    <Content Include="Scripts\bootstrap-colorpicker-module.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\Site.css" />
@@ -197,8 +199,6 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Content\spectrum.css" />
-    <Content Include="Scripts\spectrum.js" />
     <Content Include="Scripts\Views\Bulb\Index.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
@@ -219,6 +219,7 @@
     <Content Include="Views\Bulb\Index.cshtml" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-route.min.js.map" />
+    <Content Include="Templates\bulbTableRow.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
@@ -231,6 +232,14 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LifxMvc.Contracts\LifxMvc.Contracts.csproj">
+      <Project>{EA9E14A4-4483-4DCD-ABB9-177329595820}</Project>
+      <Name>LifxMvc.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LifxMvc.Domain.Mocks\LifxMvc.Domain.Mocks.csproj">
+      <Project>{88AA401D-6E14-40C3-AE03-92A07F176BD9}</Project>
+      <Name>LifxMvc.Domain.Mocks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LifxMvc.Domain\LifxMvc.Domain.csproj">
       <Project>{f8e0beeb-54f9-409f-8f6f-6b80fc8007bd}</Project>
       <Name>LifxMvc.Domain</Name>

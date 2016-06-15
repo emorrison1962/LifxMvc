@@ -19,7 +19,7 @@ namespace LifxNet
 
 		public UInt32 Duration { get; set; }
 
-		public LightSetColorPacket(Bulb bulb, HSBK hsbk)
+		public LightSetColorPacket(IBulb bulb, IHSBK hsbk)
 			: base(bulb)
 		{
 

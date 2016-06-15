@@ -2,6 +2,7 @@
 using LifxMvc.Services;
 using LifxMvc.Services.UdpHelper;
 using LifxNet;
+using LifxNet.Domain;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,12 +10,13 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace LifxMvc.Services
 {
-	public class BulbService
+	public class BulbService : IBulbService
 	{
-		R Send<R>(Bulb bulb, LifxPacketBase<R> packet) where R : LifxResponseBase
+		R Send<R>(IBulb bulb, LifxPacketBase<R> packet) where R : LifxResponseBase
 		{
 			var udp = UdpHelperManager.Instance[packet.IPEndPoint];
 			var response = udp.Send(packet);
@@ -23,32 +25,32 @@ namespace LifxMvc.Services
 			return response;
 		}
 
-		void SendAsync(Bulb bulb, LifxPacketBase packet) 
+		void SendAsync(IBulb bulb, LifxPacketBase packet) 
 		{
 			var udp = UdpHelperManager.Instance[packet.IPEndPoint];
 			udp.SendAsync(packet);
 		}
 
 
-		public void Initialize(Bulb bulb)
+		public void Initialize(IBulb bulb)
 		{
 			this.LightGet(bulb);
 			this.DeviceGetGroup(bulb);
 			this.DeviceGetLocation(bulb);
 		}
 
-		public void LightGet(Bulb bulb)
+		public void LightGet(IBulb bulb)
 		{
 			var packet = new LightGetPacket(bulb);
 			this.Send(bulb, packet);
 		}
 
-		public void DeviceGetGroup(Bulb bulb)
+		public void DeviceGetGroup(IBulb bulb)
 		{
 			var packet = new DeviceGetGroupPacket(bulb);
 			this.Send(bulb, packet);
 		}
-		public void DeviceGetLocation(Bulb bulb)
+		public void DeviceGetLocation(IBulb bulb)
 		{
 			var packet = new DeviceGetLocationPacket(bulb);
 			this.Send(bulb, packet);
@@ -56,7 +58,7 @@ namespace LifxMvc.Services
 
 
 
-		public bool DeviceGetPower(Bulb bulb)
+		public bool DeviceGetPower(IBulb bulb)
 		{
 			var packet = new DeviceGetPowerPacket(bulb);
 			var response = this.Send(bulb, packet);
@@ -65,7 +67,7 @@ namespace LifxMvc.Services
 			return result;
 		}
 
-		public void DeviceSetPower(Bulb bulb, bool isOn)
+		public void DeviceSetPower(IBulb bulb, bool isOn)
 		{
 			var packet = new DeviceSetPowerPacket(bulb, isOn);
 			this.Send(bulb, packet);
@@ -73,14 +75,14 @@ namespace LifxMvc.Services
 			bulb.IsOn = isOn;
 		}
 
-		public void DeviceGetVersion(Bulb bulb)
+		public void DeviceGetVersion(IBulb bulb)
 		{
 			var packet = new DeviceGetVersionPacket(bulb);
 			this.Send(bulb, packet);
 		}
 
 		
-		public void LightSetColor(Bulb bulb, HSBK hsbk)
+		public void LightSetColor(IBulb bulb, IHSBK hsbk)
 		{
 			var packet = new LightSetColorPacket(bulb, hsbk);
 			packet.Duration = 100;
@@ -89,150 +91,158 @@ namespace LifxMvc.Services
 			bulb.SetColor(hsbk);
 		}
 
-		public void GetHostInfo(Bulb bulb)
+		public void GetHostInfo(IBulb bulb)
 		{
 			var packet = new DeviceGetHostInfoPacket(bulb);
 			this.Send(bulb, packet);
 		}
-		public void GetHostFirmware(Bulb bulb)
+		public void GetHostFirmware(IBulb bulb)
 		{
 			var packet = new DeviceGetHostFirmwarePacket(bulb);
 			this.Send(bulb, packet);
 		}
-		public void GetWifiInfo(Bulb bulb)
+		public void GetWifiInfo(IBulb bulb)
 		{
 			var packet = new DeviceGetWifiInfoPacket(bulb);
 			this.Send(bulb, packet);
 		}
-		public void GetWifiFirmware(Bulb bulb)
+		public void GetWifiFirmware(IBulb bulb)
 		{
 			var packet = new DeviceGetWifiFirmwarePacket(bulb);
 			this.Send(bulb, packet);
 		}
-		public void GetLabel(Bulb bulb)
+		public void GetLabel(IBulb bulb)
 		{
 			var packet = new DeviceGetLabelPacket(bulb);
 			this.Send(bulb, packet);
 		}
-		public void SetLabel(Bulb bulb, string label)
+		public void SetLabel(IBulb bulb, string label)
 		{
 			var packet = new DeviceSetLabelPacket(bulb, label);
 			this.Send(bulb, packet);
 		}
 
-		public void GetInfo(Bulb bulb)
+		public void GetInfo(IBulb bulb)
 		{
 			var packet = new DeviceGetInfoPacket(bulb);
 			this.Send(bulb, packet);
 		}
-		public void EchoRequest(Bulb bulb)
+		public void EchoRequest(IBulb bulb)
 		{
 			var packet = new DeviceEchoRequestPacket(bulb);
 			this.Send(bulb, packet);
 		}
-		public bool LightGetPower(Bulb bulb)
+		public bool LightGetPower(IBulb bulb)
 		{
 			var packet = new LightGetPowerPacket(bulb);
 			this.Send(bulb, packet);
 			return bulb.IsOn;
 		}
-		public void LightSetPower(Bulb bulb, bool power)
+		public void LightSetPower(IBulb bulb, bool power)
 		{
 			var packet = new LightSetPowerPacket(bulb, power);
 			this.Send(bulb, packet);
 			bulb.IsOn = power;
 		}
 
-		public void LightSetWaveform(Bulb bulb, LightSetWaveformCreationContext ctx)
+		public void LightSetWaveform(IBulb bulb, LightSetWaveformCreationContext ctx)
 		{
 			var packet = new LightSetWaveformPacket(bulb, ctx);
 			this.SendAsync(bulb, packet);
 		}
 
+		public void LightSetColor(IBulb bulb, Color color)
+		{
+			var hsbk = color.ToHSBK();
+			LightSetColor(bulb, hsbk);
+		}
 
-		
+
+
 
 	}//class
 
 	public static class BulbExtensions
 	{
-		public static void SetColor(this Bulb bulb, HSBK hsbk)
+		public static void SetColor(this IBulb bulb, IHSBK hsbk)
 		{
+			bulb.Color = hsbk.ToColor();
+
 			bulb.Hue = hsbk.Hue;
 			bulb.Saturation = hsbk.Saturation;
 			bulb.Brightness = hsbk.Brightness;
 			bulb.Kelvin = hsbk.Kelvin;
 		}
 
-		public static void Set(this Bulb bulb, DeviceAcknowledgementResponse r)
+		public static void Set(this IBulb bulb, DeviceAcknowledgementResponse r)
 		{
 		}
 
-		public static void Set(this Bulb bulb, DeviceEchoResponse r)
+		public static void Set(this IBulb bulb, DeviceEchoResponse r)
 		{
 		}
 
-		public static void Set(this Bulb bulb, DeviceStateGroupResponse r)
+		public static void Set(this IBulb bulb, DeviceStateGroupResponse r)
 		{
 			bulb.Group = r.Label;
 		}
 
-		public static void Set(this Bulb bulb, DeviceStateHostFirmwareResponse r)
+		public static void Set(this IBulb bulb, DeviceStateHostFirmwareResponse r)
 		{
 			bulb.HostFirmwareBuild = r.Build;
 			bulb.HostFirmwareVersion = r.Version;
 		}
 
-		public static void Set(this Bulb bulb, DeviceStateHostInfoResponse r)
+		public static void Set(this IBulb bulb, DeviceStateHostInfoResponse r)
 		{
 			bulb.Signal = r.Signal;
 			bulb.TxCount = r.TxCount;
 			bulb.RxCount = r.RxCount;
 		}
 
-		public static void Set(this Bulb bulb, DeviceStateInfoResponse r)
+		public static void Set(this IBulb bulb, DeviceStateInfoResponse r)
 		{
 			bulb.Time = r.Time;
 			bulb.Uptime = r.Uptime;
 			bulb.Downtime = r.Downtime;
 		}
 
-		public static void Set(this Bulb bulb, DeviceStateLabelResponse r)
+		public static void Set(this IBulb bulb, DeviceStateLabelResponse r)
 		{
 			bulb.Label = r.Label;
 		}
 		
-		public static void Set(this Bulb bulb, DeviceStateLocationResponse r)
+		public static void Set(this IBulb bulb, DeviceStateLocationResponse r)
 		{
 			bulb.Location = r.Label;
 		}
 
-		public static void Set(this Bulb bulb, DeviceStatePowerResponse r)
+		public static void Set(this IBulb bulb, DeviceStatePowerResponse r)
 		{
 			bulb.IsOn = r.IsOn;
 		}
 
 		
-		public static void Set(this Bulb bulb, DeviceStateServiceResponse r)
+		public static void Set(this IBulb bulb, DeviceStateServiceResponse r)
 		{
 			bulb.Service = r.Service;
 			bulb.Port = r.Port;
 		}
 		
-		public static void Set(this Bulb bulb, DeviceStateVersionResponse r)
+		public static void Set(this IBulb bulb, DeviceStateVersionResponse r)
 		{
 			bulb.Vendor = r.Vendor;
 			bulb.Product = r.Product;
 			bulb.Version = r.Version;
 		}
 
-		public static void Set(this Bulb bulb, DeviceStateWifiFirmwareResponse r)
+		public static void Set(this IBulb bulb, DeviceStateWifiFirmwareResponse r)
 		{
 			bulb.WifiFirmwareBuild = r.Build;
 			bulb.WifiFirmwareVersion = r.Version;
 		}
 
-		public static void Set(this Bulb bulb, DeviceStateWifiInfoResponse r)
+		public static void Set(this IBulb bulb, DeviceStateWifiInfoResponse r)
 		{
 			bulb.WifiInfoSignal = r.Signal;
 			bulb.WifiInfoTxCount = r.TxCount;
@@ -240,22 +250,26 @@ namespace LifxMvc.Services
 		}
 
 		
-		public static void Set(this Bulb bulb, LightStatePowerResponse r)
+		public static void Set(this IBulb bulb, LightStatePowerResponse r)
 		{
 			bulb.IsOn = r.IsOn;
 		}
 
-		public static void Set(this Bulb bulb, LightStateResponse r)
+		public static void Set(this IBulb bulb, LightStateResponse r)
 		{
+			bulb.IsOn = r.IsOn;
+			bulb.Label = r.Label;
+
 			bulb.Hue = r.Hue;
 			bulb.Saturation = r.Saturation;
 			bulb.Brightness = r.Brightness;
 			bulb.Kelvin = r.Kelvin;
-			bulb.IsOn = r.IsOn;
-			bulb.Label = r.Label;
+
+			var hsbk = new HSBK(r.Hue, r.Saturation, r.Brightness, r.Kelvin);
+			bulb.SetHSBK(hsbk);
 		}
 
-		public static void Set(this Bulb bulb, UnknownResponse r)
+		public static void Set(this IBulb bulb, UnknownResponse r)
 		{
 			throw new ArgumentOutOfRangeException();
 		}

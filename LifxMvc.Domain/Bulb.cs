@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LifxMvc.Domain;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,8 +12,20 @@ namespace LifxMvc.Domain
 	public class Bulb : IBulb
 	{
 		static int _nextBulbId = 0;
+		Color _color;
+		string _colorString;
+
 		public int BulbId { get; private set; }
-		public Color Color { get; set; }
+		public string ColorString
+		{
+			get { return _colorString; }
+		}
+		public Color Color
+		{
+			get { return _color; }
+			set { this.SetColor(value); }
+		}
+
 
 		public string Group { get; set; }
 
@@ -33,7 +46,7 @@ namespace LifxMvc.Domain
 		/// </summary>
 		public UInt16 Kelvin { get; set; }
 
-		public HSBK HSBK { get { return new HSBK(this.Hue, this.Saturation, this.Brightness, this.Kelvin); } }
+		public IHSBK HSBK { get { return new HSBK(this.Hue, this.Saturation, this.Brightness, this.Kelvin); } }
 
 		/// <summary>
 		/// Power state
@@ -116,7 +129,6 @@ namespace LifxMvc.Domain
 			HostFirmwareBuild = DateTime.MaxValue;
 			IPEndPoint = null;
 			Service = byte.MaxValue;
-			Int32 Port = Int32.MaxValue;
 			LastSeen = DateTime.MaxValue;
 			Vendor = UInt32.MaxValue;
 			Product = UInt32.MaxValue;
@@ -124,9 +136,26 @@ namespace LifxMvc.Domain
 
 		}
 
+		private void SetColor(Color value)
+		{
+			this._color = value;
+			const string RGB_FORMAT = "rgb({0},{1},{2})";
+			this._colorString = string.Format(RGB_FORMAT, value.R, value.G, value.B);
+		}
 
-	
-	public override string ToString()
+		public void SetHSBK(IHSBK hsbk)
+		{
+			this.Hue = hsbk.Hue;
+			this.Saturation = hsbk.Saturation;
+			this.Brightness = hsbk.Brightness;
+			this.Kelvin = hsbk.Kelvin;
+
+			var color = hsbk.ToColor();
+			this.SetColor(color);
+		}
+
+
+		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append(base.ToString() + ": ");

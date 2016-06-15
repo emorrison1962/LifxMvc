@@ -10,7 +10,7 @@ namespace LifxNet
 	public class DeviceGetPowerPacket : LifxPacketBase<DeviceStatePowerResponse>
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceGetPower; } }
-		public DeviceGetPowerPacket(Bulb bulb) : base(bulb)
+		public DeviceGetPowerPacket(IBulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
 		}

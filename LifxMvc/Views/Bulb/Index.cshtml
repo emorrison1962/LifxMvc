@@ -49,14 +49,14 @@
 								<td>
 									<a class="btn btn-sm btn-default aria-label=" Toggle Power on this Bulb""
 									   ng-click="togglePowerBulb(bulb.BulbId)">
-										<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: bulb.IsOn ? 'red' : 'gray' }"></span>
+										<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: bulb.IsOn ? 'white' : 'gray' }"></span>
 									</a>
 
 									{{ bulb.Label }}
 								</td>
 								<td>
-									{{ bulb.Hue }}
-
+									{{ bulb.Group }}
+									<button class="btn btn-sm" colorpicker="rgb" ng-model=bulb.ColorString ng-change=bulbColorChanged(bulb) ng-style=getButtonBackground(bulb.ColorString)> </button>
 								</td>
 								<td>
 									{{ bulb.Saturation }}
@@ -70,8 +70,8 @@
 								<td>
 									Bulb Edit, Details, Delete
 									@*@Html.ActionLink("Edit", "Edit", new { id = bulb.BulbId }) |
-						@Html.ActionLink("Details", "Details", new { id = bulb.BulbId }) |
-						@Html.ActionLink("Delete", "Delete", new { id = bulb.BulbId })*@
+										@Html.ActionLink("Details", "Details", new { id = bulb.BulbId }) |
+										@Html.ActionLink("Delete", "Delete", new { id = bulb.BulbId })*@
 								</td>
 							</tr>
 
@@ -79,27 +79,19 @@
 					</div>
 
 				</td>
-	<td>
-		Group Edit, Details, Delete
-		@*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-			@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-			@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-	</td>
-	</tr>
+				<td>
+					Group Edit, Details, Delete
+					@*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+						@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+						@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+				</td>
+			</tr>
 
-	</table>
+		</table>
 
-	<spectrum-colorpicker ng-model="mycolor"></spectrum-colorpicker>
-	<div>
-		<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: {{mycolor}} }"></span>
 	</div>
 </div>
-</div>
 
-
-@*<h2>Basic Usage</h2>
-<input type='text' class="basic" />
-<em id='basic-log'></em>*@
 
 
 <script src="~/scripts/views/Bulb/Index.js"></script>

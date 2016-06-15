@@ -12,7 +12,7 @@ namespace LifxNet
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceSetPower; } }
 		public bool IsOn { get; private set; }
-		public DeviceSetPowerPacket(Bulb bulb, bool isOn)
+		public DeviceSetPowerPacket(IBulb bulb, bool isOn)
 			: base(bulb)
 
 		{

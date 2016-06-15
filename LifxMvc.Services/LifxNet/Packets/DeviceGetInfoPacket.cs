@@ -11,7 +11,7 @@ namespace LifxNet
 
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceGetInfo; } }
-		public DeviceGetInfoPacket(Bulb bulb) : base(bulb)
+		public DeviceGetInfoPacket(IBulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
 		}

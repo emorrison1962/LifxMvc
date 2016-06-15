@@ -13,7 +13,7 @@ namespace LifxNet
 	public abstract class LifxPacketBase<R> : LifxPacketBase where R : LifxResponseBase
 	{
 		public Type ExpectedResponseType { get { return typeof(R); } }
-		public LifxPacketBase(Bulb bulb)
+		public LifxPacketBase(IBulb bulb)
 			: base(bulb)
 		{ }
 
@@ -49,7 +49,7 @@ namespace LifxNet
 		
 		#region Construction
 
-		protected LifxPacketBase(Bulb bulb)
+		protected LifxPacketBase(IBulb bulb)
 		{
 			this.Header = new FrameHeader();
 			if (null != bulb)

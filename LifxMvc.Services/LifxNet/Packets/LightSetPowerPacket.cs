@@ -13,7 +13,7 @@ namespace LifxNet
 		public bool IsOn { get; private set; }
 		public UInt32 Duration { get; set; }
 
-		public LightSetPowerPacket(Bulb bulb, bool isOn)
+		public LightSetPowerPacket(IBulb bulb, bool isOn)
 			: base(bulb)
 		{
 			this.IsOn = isOn;

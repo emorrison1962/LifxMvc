@@ -11,7 +11,7 @@ namespace LifxNet
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceEchoRequest; } }
 
-		public DeviceEchoRequestPacket(Bulb bulb) : base(bulb)
+		public DeviceEchoRequestPacket(IBulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
 		}

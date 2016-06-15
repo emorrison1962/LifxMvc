@@ -3,7 +3,10 @@ using LifxMvc.Models;
 using LifxMvc.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Helpers;
@@ -16,20 +19,28 @@ namespace LifxMvc.Controllers
 		const string BULBS = "BulbController.Bulbs";
 
 		ICacheService CacheService { get; set; }
-		List<Bulb> Bulbs
+		IDiscoveryService DiscoveryService { get; set; }
+		IBulbService BulbService { get; set; }
+
+		List<IBulb> Bulbs
 		{
 			get { return CacheService.GetOrSet(BULBS, this.GetBulbs); }
 		}
 
 
-		public BulbController(ICacheService cacheSvc)
+		#region Construction
+		public BulbController(ICacheService cacheSvc, IDiscoveryService discoverySvc, IBulbService bulbSvc)
 		{
 			this.CacheService = cacheSvc;
+			this.DiscoveryService = discoverySvc;
+			this.BulbService = bulbSvc;
 		}
 
-		class BulbComparer : IComparer<Bulb>
+		#endregion
+
+		class BulbComparer : IComparer<IBulb>
 		{
-			public int Compare(Bulb x, Bulb y)
+			public int Compare(IBulb x, IBulb y)
 			{
 				var result = (x.Group ?? "").CompareTo((y.Group ?? ""));
 				if (0 == result)
@@ -41,14 +52,14 @@ namespace LifxMvc.Controllers
 			}
 		}
 
-		List<Bulb> GetBulbs()
+		List<IBulb> GetBulbs()
 		{
-			List<Bulb> bulbs = new List<Bulb>();
-			using (var svc = new DiscoveryService())
-			{
-				bulbs = svc.DiscoverAsync(8);
+			List<IBulb> bulbs = new List<IBulb>();
+			//using (var svc = new DiscoveryService())
+			//{
+				bulbs = this.DiscoveryService.DiscoverAsync(8);
 				bulbs.Sort(new BulbComparer());
-			}
+			//}
 			return bulbs;
 		}
 
@@ -88,7 +99,7 @@ namespace LifxMvc.Controllers
 		{
 			var isOn = this.Bulbs.Where(x => x.IsOn).Count() > 0;
 
-			var svc = new BulbService();
+			var svc = this.BulbService;
 			foreach (var bulb in Bulbs)
 			{
 				svc.LightSetPower(bulb, !isOn);
@@ -101,7 +112,7 @@ namespace LifxMvc.Controllers
 			var bulbs = this.Bulbs.Where(x => x.Group == name);
 			var isOn = bulbs.Where(x => x.IsOn).Count() > 0;
 			
-			var svc = new BulbService();
+			var svc = this.BulbService;
 			foreach (var bulb in bulbs)
 			{
 				svc.LightSetPower(bulb, !isOn);
@@ -114,7 +125,7 @@ namespace LifxMvc.Controllers
 		{
 			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
 
-			var svc = new BulbService();
+			var svc = this.BulbService;
 			svc.LightSetPower(bulb, !bulb.IsOn);
 			return RedirectToAction("Index");
 		}
@@ -123,7 +134,7 @@ namespace LifxMvc.Controllers
 		{
 			var isOn = this.Bulbs.Where(x => x.IsOn).Count() > 0;
 
-			var svc = new BulbService();
+			var svc = this.BulbService;
 			foreach (var bulb in Bulbs)
 			{
 				svc.LightSetPower(bulb, !isOn);
@@ -139,7 +150,7 @@ namespace LifxMvc.Controllers
 			var bulbs = this.Bulbs.Where(x => x.Group == name);
 			var isOn = bulbs.Where(x => x.IsOn).Count() > 0;
 
-			var svc = new BulbService();
+			var svc = this.BulbService;
 			foreach (var bulb in bulbs)
 			{
 				svc.LightSetPower(bulb, !isOn);
@@ -154,20 +165,57 @@ namespace LifxMvc.Controllers
 		{
 			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
 
-			var svc = new BulbService();
+			var svc = this.BulbService;
 			svc.LightSetPower(bulb, !bulb.IsOn);
 
 			var vm = new BulbsViewModel(this.Bulbs);
 			var result = Json(vm, JsonRequestBehavior.AllowGet);
 			return result;
 		}
+																						
+		public JsonResult SetColorBulbJson(int bulbId, string color)
+		{
+
+			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
+			var svc = this.BulbService;
+
+			var c = this.ParseColor(color);
+			svc.LightSetColor(bulb, c);
+
+			var vm = new BulbsViewModel(this.Bulbs);
+			var result = Json(vm, JsonRequestBehavior.AllowGet);
+			return result;
+		}
+
+		Color ParseColor(string color)
+		{
+			//Parse: rgb(255, 0, 137)
+			const string REGEX = @"\D+";
+			var values = Regex.Split(color, REGEX).Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+			const int EXPECTED_LENGTH = 3;
+			if (EXPECTED_LENGTH != values.Length)
+				throw new Exception("Unexpected result parsing color.");
+
+			var result = Color.FromArgb(Convert.ToInt32(values[0]),
+				Convert.ToInt32(values[1]),
+				Convert.ToInt32(values[2]));
+
+			return result;
+		}
 
 
 
 		[HttpPost]
-		public ActionResult Index(List<Bulb> list)
+		public ActionResult Index(List<IBulb> list)
 		{
 			return View(list);
+		}
+
+		public ActionResult GetBulbView()
+		{
+			var result = PartialView("bulbTableRow.cshtml");
+			return result;
 		}
 
 	}

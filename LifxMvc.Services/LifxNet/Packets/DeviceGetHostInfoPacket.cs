@@ -10,7 +10,7 @@ namespace LifxNet
 	public class DeviceGetHostInfoPacket : LifxPacketBase<DeviceStateHostInfoResponse>
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceGetHostInfo; } }
-		public DeviceGetHostInfoPacket(Bulb bulb) : base(bulb)
+		public DeviceGetHostInfoPacket(IBulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
 		}

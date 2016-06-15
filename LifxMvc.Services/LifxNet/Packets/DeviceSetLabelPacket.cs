@@ -26,7 +26,7 @@ namespace LifxNet
 				_label = value;
 			}
 		}
-		public DeviceSetLabelPacket(Bulb bulb, string label) : base(bulb)
+		public DeviceSetLabelPacket(IBulb bulb, string label) : base(bulb)
 		{
 			this.Header.AcknowledgeRequired = true;
 			this.Label = label;

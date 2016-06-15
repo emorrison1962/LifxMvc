@@ -10,7 +10,7 @@ namespace LifxNet
 	public class DeviceGetLocationPacket : LifxPacketBase<DeviceStateLocationResponse>
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceGetLocation; } }
-		public DeviceGetLocationPacket(Bulb bulb) : base(bulb)
+		public DeviceGetLocationPacket(IBulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
 		}

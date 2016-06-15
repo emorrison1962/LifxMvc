@@ -10,7 +10,7 @@ namespace LifxNet
 	public class DeviceGetHostFirmwarePacket : LifxPacketBase<DeviceStateHostFirmwareResponse>
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceGetHostFirmware; } }
-		public DeviceGetHostFirmwarePacket(Bulb bulb) : base(bulb)
+		public DeviceGetHostFirmwarePacket(IBulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
 		}

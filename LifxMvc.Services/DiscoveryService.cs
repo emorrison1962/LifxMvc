@@ -1,4 +1,5 @@
 ﻿using LifxMvc.Domain;
+using LifxMvc.Services;
 using LifxMvc.Services.UdpHelper;
 using LifxNet;
 using System;
@@ -13,16 +14,16 @@ using System.Threading.Tasks;
 
 namespace LifxMvc.Services
 {
-	public class DiscoveryService : IDisposable
+	public class DiscoveryService : IDisposable, IDiscoveryService
 	{
-		List<Bulb> Bulbs { get; set; }
+		List<IBulb> Bulbs { get; set; }
 		ManualResetEventSlim Wait { get; set; }
 
 
 
-		public List<Bulb> DiscoverAsync(int expectedCount)
+		public List<IBulb> DiscoverAsync(int expectedCount)
 		{
-			this.Bulbs = new List<Bulb>();
+			this.Bulbs = new List<IBulb>();
 			var packet = new DeviceGetServicePacket();
 
 			var udp = UdpHelperManager.Instance.DiscoveryUdpHelper;
@@ -32,6 +33,7 @@ namespace LifxMvc.Services
 			this._sw = Stopwatch.StartNew();
 			udp.BroadcastAndListen(packet, expectedCount, 10 * 1000);
 			var result = this.Bulbs;
+
 			return result;
 		}
 

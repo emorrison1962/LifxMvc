@@ -10,7 +10,7 @@ namespace LifxNet
 	public class DeviceGetWifiFirmwarePacket : LifxPacketBase<DeviceStateWifiFirmwareResponse>
 	{
 		override public PacketType MessageType { get { return PacketType.DeviceGetWifiFirmware; } }
-		public DeviceGetWifiFirmwarePacket(Bulb bulb) : base(bulb)
+		public DeviceGetWifiFirmwarePacket(IBulb bulb) : base(bulb)
 		{
 			this.Header.ResponseRequired = true;
 		}

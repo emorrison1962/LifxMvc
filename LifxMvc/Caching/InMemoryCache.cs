@@ -9,7 +9,8 @@ public class InMemoryCache : ICacheService
 		if (item == null)
 		{
 			item = getItemCallback();
-			MemoryCache.Default.Add(cacheKey, item, DateTime.Now.AddMinutes(10));
+			//MemoryCache.Default.Add(cacheKey, item, DateTime.Now.AddMinutes(10));
+			MemoryCache.Default.Add(cacheKey, item, DateTime.Now.AddHours(2));
 		}
 		return item;
 	}

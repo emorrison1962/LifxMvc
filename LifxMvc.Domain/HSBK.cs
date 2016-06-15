@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LifxMvc.Domain
 {
-	public class HSBK
+	public class HSBK : IHSBK
 	{
 		public UInt16 Hue { get; private set; }
 		public UInt16 Saturation { get; private set; }
@@ -20,6 +20,33 @@ namespace LifxMvc.Domain
 			this.Brightness = b;
 			this.Kelvin = k;
 		}
+		public HSBK(double h, double s, double b)
+		{
+			this.Hue = this.ToUInt16(h);
+			this.Saturation = this.ToUInt16(s);
+
+			this.Brightness = this.ToUInt16(b);
+			this.Kelvin = 0;
+		}
+
+		public void GetHSB(out double h, out double s, out double b)
+		{
+			h = (double)this.Hue / (double)UInt16.MaxValue;
+			s = (double)this.Saturation / (double)UInt16.MaxValue;
+			b = (double)this.Brightness / (double)UInt16.MaxValue;
+		}
+
+		UInt16 ToUInt16(double d)
+		{
+			UInt16 result = 0;
+			if (d > 0)
+			{
+				result = (UInt16)Math.Round(UInt16.MaxValue * d); 
+			}
+
+			return result;
+		}
+
 		public void RotateHue()
 		{
 			if (0 != this.Saturation)
@@ -41,6 +68,17 @@ namespace LifxMvc.Domain
 			}
 		}
 
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append(base.ToString());
+			var s = string.Format(": Hue={0}, Saturation={1}, Brightness={2}",
+				this.Hue,
+				this.Saturation,
+				this.Brightness);
+			sb.AppendLine(s);
+			return sb.ToString();
+		}
 
 
 	}

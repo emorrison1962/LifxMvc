@@ -10,6 +10,7 @@ using System.Threading;
 using LifxMvc.Services.UdpHelper;
 using LifxNet;
 using System.Diagnostics;
+using LifxNet.Domain;
 
 namespace LifxMvc.Services.Tests
 {
@@ -26,7 +27,7 @@ namespace LifxMvc.Services.Tests
 
 		#region Properties
 
-		static List<Bulb> Bulbs { get; set; }
+		static List<IBulb> Bulbs { get; set; }
 
 		BulbService BulbService
 		{
@@ -56,7 +57,7 @@ namespace LifxMvc.Services.Tests
 			var svc = new DiscoveryService();
 
 			var result = svc.DiscoverAsync(EXPECTED_BULB_COUNT);
-			Bulbs = new List<Bulb>(result);
+			Bulbs = new List<IBulb>(result);
 			Bulbs.Sort(new BulbComparer());
 
 			//var bulbService = new BulbService();
@@ -78,43 +79,43 @@ namespace LifxMvc.Services.Tests
 
 		#region Utils
 
-		class BulbComparer : IComparer<Bulb>
+		class BulbComparer : IComparer<IBulb>
 		{
-			public int Compare(Bulb x, Bulb y)
+			public int Compare(IBulb x, IBulb y)
 			{
 				return x.IPEndPoint.ToString().CompareTo(y.IPEndPoint.ToString());
 			}
 		}
 
-		void LightSetPower(Bulb bulb, bool power)
+		void LightSetPower(IBulb bulb, bool power)
 		{
 			BulbService.LightSetPower(bulb, power);
 		}
 
-		bool LightGetPower(Bulb bulb)
+		bool LightGetPower(IBulb bulb)
 		{
 			var result = BulbService.LightGetPower(bulb);
 			return result;
 		}
 
-		void DeviceSetPower(Bulb bulb, bool power)
+		void DeviceSetPower(IBulb bulb, bool power)
 		{
 			BulbService.DeviceSetPower(bulb, power);
 		}
 
-		bool DeviceGetPower(Bulb bulb)
+		bool DeviceGetPower(IBulb bulb)
 		{
 			var result = BulbService.DeviceGetPower(bulb);
 			return result;
 		}
 
-		void TurnOn(Bulb bulb)
+		void TurnOn(IBulb bulb)
 		{
 			if (!bulb.IsOn)
 				this.DeviceSetPower(bulb, true);
 		}
 
-		void TurnOff(Bulb bulb)
+		void TurnOff(IBulb bulb)
 		{
 			if (!bulb.IsOn)
 				this.DeviceSetPower(bulb, false);
@@ -163,7 +164,7 @@ namespace LifxMvc.Services.Tests
 							new object();
 
 						var hsbk = new HSBK(bulb.Hue, bulb.Saturation, bulb.Brightness, bulb.Kelvin);
-						hsbk.RotateHue();
+						//hsbk.RotateHue();
 						BulbService.LightSetColor(bulb, hsbk);
 					}
 				}
@@ -383,10 +384,10 @@ namespace LifxMvc.Services.Tests
 		}
 
 
-		LightSetWaveformCreationContext CreateLightSetWaveformCreationContext(Bulb bulb)
+		LightSetWaveformCreationContext CreateLightSetWaveformCreationContext(IBulb bulb)
 		{
 			var hsbk = bulb.HSBK;
-			hsbk.RotateHue(180);
+			//hsbk.RotateHue(180);
 			var result = new LightSetWaveformCreationContext(true, hsbk, 250, 100, 0, WaveformEnum.HalfSine);
 			return result;
 		}

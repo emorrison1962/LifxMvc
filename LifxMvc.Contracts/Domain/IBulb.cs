@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Drawing;
+using System.Net;
 
 namespace LifxMvc.Domain
 {
 	public interface IBulb
 	{
+		string ColorString { get; }
+		IPEndPoint IPEndPoint { get; set; }
+		IHSBK HSBK { get; }
 		ushort Brightness { get; set; }
 		DateTime Build { get; set; }
 		int BulbId { get; }
-		Color Color { get; set; }
+		System.Drawing.Color Color { get; set; }
 		DateTime Downtime { get; set; }
 		string Group { get; set; }
 		DateTime HostFirmwareBuild { get; set; }
@@ -36,5 +40,7 @@ namespace LifxMvc.Domain
 		uint WifiInfoRxCount { get; set; }
 		float WifiInfoSignal { get; set; }
 		uint WifiInfoTxCount { get; set; }
+
+		void SetHSBK(IHSBK hsbk);
 	}
 }

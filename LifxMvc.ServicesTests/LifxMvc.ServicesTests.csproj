@@ -36,7 +36,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Colorspace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Colorspace.1.0.2\lib\net40\Colorspace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -51,10 +56,19 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ColorExtensionsTests.cs" />
     <Compile Include="DiscoveryServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RandomValue\RandomValue.csproj">
+      <Project>{FA23D97F-BDE3-4F4A-95F7-6A7A15E934FE}</Project>
+      <Name>RandomValue</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LifxMvc.Contracts\LifxMvc.Contracts.csproj">
+      <Project>{EA9E14A4-4483-4DCD-ABB9-177329595820}</Project>
+      <Name>LifxMvc.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LifxMvc.Domain\LifxMvc.Domain.csproj">
       <Project>{F8E0BEEB-54F9-409F-8F6F-6B80FC8007BD}</Project>
       <Name>LifxMvc.Domain</Name>
@@ -63,6 +77,9 @@
       <Project>{9FAE5E49-B913-47E0-A5E0-DB83F3A82FB1}</Project>
       <Name>LifxMvc.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

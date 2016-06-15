@@ -17,6 +17,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LifxMvc.ServicesTests", "Li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LifxPacketParser.console", "LifxPacketParser.console\LifxPacketParser.console.csproj", "{BD443A6B-7C7C-4F81-9EB5-E5036E8B8D9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LifxMvc.Services.Mocks", "LifxMvc.Services.Mocks\LifxMvc.Services.Mocks.csproj", "{48D25CAD-4325-4625-BA12-1C3EA72A8704}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LifxMvc.Domain.Mocks", "LifxMvc.Domain.Mocks\LifxMvc.Domain.Mocks.csproj", "{88AA401D-6E14-40C3-AE03-92A07F176BD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomValue", "..\RandomValue\RandomValue.csproj", "{FA23D97F-BDE3-4F4A-95F7-6A7A15E934FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +57,18 @@ Global
 		{BD443A6B-7C7C-4F81-9EB5-E5036E8B8D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD443A6B-7C7C-4F81-9EB5-E5036E8B8D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD443A6B-7C7C-4F81-9EB5-E5036E8B8D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48D25CAD-4325-4625-BA12-1C3EA72A8704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48D25CAD-4325-4625-BA12-1C3EA72A8704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48D25CAD-4325-4625-BA12-1C3EA72A8704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48D25CAD-4325-4625-BA12-1C3EA72A8704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88AA401D-6E14-40C3-AE03-92A07F176BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88AA401D-6E14-40C3-AE03-92A07F176BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88AA401D-6E14-40C3-AE03-92A07F176BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88AA401D-6E14-40C3-AE03-92A07F176BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA23D97F-BDE3-4F4A-95F7-6A7A15E934FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA23D97F-BDE3-4F4A-95F7-6A7A15E934FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA23D97F-BDE3-4F4A-95F7-6A7A15E934FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA23D97F-BDE3-4F4A-95F7-6A7A15E934FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

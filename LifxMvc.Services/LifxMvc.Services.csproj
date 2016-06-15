@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Colorspace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Colorspace.1.0.2\lib\net40\Colorspace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
@@ -49,6 +53,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,7 +63,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BulbService.cs" />
+    <Compile Include="BulbServiceMock.cs" />
     <Compile Include="DiscoveryService.cs" />
+    <Compile Include="DiscoveryServiceMock.cs" />
+    <Compile Include="HSLConverter.cs" />
     <Compile Include="LifxNet\Constants.cs" />
     <Compile Include="LifxNet\Extensions.cs" />
     <Compile Include="LifxNet\Packets\LightSetWaveformPacket.cs" />
@@ -109,6 +117,14 @@
     <Compile Include="WaitableQueue.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LifxMvc.Contracts\LifxMvc.Contracts.csproj">
+      <Project>{EA9E14A4-4483-4DCD-ABB9-177329595820}</Project>
+      <Name>LifxMvc.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LifxMvc.Domain.Mocks\LifxMvc.Domain.Mocks.csproj">
+      <Project>{88AA401D-6E14-40C3-AE03-92A07F176BD9}</Project>
+      <Name>LifxMvc.Domain.Mocks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LifxMvc.Domain\LifxMvc.Domain.csproj">
       <Project>{F8E0BEEB-54F9-409F-8F6F-6B80FC8007BD}</Project>
       <Name>LifxMvc.Domain</Name>
