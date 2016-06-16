@@ -1,24 +1,6 @@
-﻿//var lifxMvcApp = angular.module("lifxMvcApp", []);
-var lifxMvcApp = angular.module("lifxMvcApp", ['colorpicker.module']);
-
-
+﻿var lifxMvcApp = angular.module("lifxMvcApp", ['colorpicker.module']);
 
 var indexController = lifxMvcApp.controller("bulbIndexController", ['$scope', '$window', '$log', '$http', function ($scope, $window, $log, $http) {
-
-
-	$scope.models = [
-		  { color: "rgb(5, 5, 5)" },
-		  { color: "#cf1115" },
-		  { color: "#999999" },
-	];
-
-	var mycolor = "rgb(0, 255, 0)";
-	$scope.mycolor = mycolor;
-
-	$scope.$watch("mycolor", function (newValue, oldValue) {
-		$log.info(mycolor);
-		
-	});
 
 	$scope.getModel = function () {
 		$http.get('/Bulb/IndexJson')
@@ -43,42 +25,25 @@ var indexController = lifxMvcApp.controller("bulbIndexController", ['$scope', '$
 		$scope.setColorBulb(bulbId, color.value);
 	});
 
-	$scope.$on('bulb.ColorString', function (event, color) {
-		var bulbId = event.targetScope.bulb.BulbId;
-		$scope.setColorBulb(bulbId, color.value);
-	});
-
-
-
 	$scope.bulbColorChanged = function (bulb) {
 		$scope.setColorBulb(bulb.BulbId, bulb.ColorString);
 	};
 
-	
-
 	$scope.areAnyOn = function () {
 		var result = false;
-		//if ($scope.groups) {
-		//	var glen = $scope.groups.length;
-		//	for (i = 0; i < glen; i++) {
-		//		if ($scope.isGroupOn($scope.groups[i])) {
-		//			result = true;
-		//			break;
-		//		}
-		//	}
-		//}
+		var arr = jQuery.makeArray($scope.groups)
+		result = arr.some($scope.isGroupOn);
 		return result;
 	};
 
+	function isBulbOn(bulb) {
+		return bulb.IsOn;
+	}
+
 	$scope.isGroupOn = function (group) {
 		var result = false;
-		//var len = group.Bulbs.length;
-		//for (i = 0; i < len; i++) {
-		//	if (group.Bulbs[i].IsOn) {
-		//		result = true;
-		//		break;
-		//	}
-		//}
+		var arr = jQuery.makeArray(group.Bulbs)
+		result = arr.some(isBulbOn);
 		return result;
 	};
 

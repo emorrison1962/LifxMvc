@@ -24,7 +24,7 @@ namespace LifxMvc.Domain
 		DateTime LastSeen { get; set; }
 		string Location { get; set; }
 		uint Port { get; set; }
-		uint Product { get; set; }
+		LifxProductEnum Product { get; set; }
 		uint RxCount { get; set; }
 		ushort Saturation { get; set; }
 		byte Service { get; set; }
@@ -42,5 +42,6 @@ namespace LifxMvc.Domain
 		uint WifiInfoTxCount { get; set; }
 
 		void SetHSBK(IHSBK hsbk);
+		bool IsColor { get; }
 	}
 }

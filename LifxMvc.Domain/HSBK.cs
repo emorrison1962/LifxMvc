@@ -12,13 +12,29 @@ namespace LifxMvc.Domain
 		public UInt16 Saturation { get; private set; }
 		public UInt16 Brightness { get; private set; }
 		public UInt16 Kelvin { get; private set; }
+		public bool IsColor { get; set; }
 
-		public HSBK(UInt16 h, UInt16 s, UInt16 b, UInt16 k)
+		private HSBK(UInt16 h, UInt16 s, UInt16 b, UInt16 k)
 		{
 			this.Hue = h;
 			this.Saturation = s;
 			this.Brightness = b;
 			this.Kelvin = k;
+		}
+		public HSBK(UInt16 h, UInt16 s, UInt16 b)
+		{
+			this.Hue = h;
+			this.Saturation = s;
+			this.Brightness = b;
+			this.Kelvin = 0;
+			this.IsColor = true;
+		}
+
+		public HSBK(UInt16 kelvin, UInt16 brightness)
+		{
+			this.Kelvin = kelvin;
+			this.Brightness = brightness;
+			this.IsColor = false;
 		}
 		public HSBK(double h, double s, double b)
 		{
@@ -27,6 +43,11 @@ namespace LifxMvc.Domain
 
 			this.Brightness = this.ToUInt16(b);
 			this.Kelvin = 0;
+			this.IsColor = true;
+		}
+		public static HSBK Create(UInt16 h, UInt16 s, UInt16 b, UInt16 k)
+		{
+			return new HSBK(h, s, b, k);
 		}
 
 		public void GetHSB(out double h, out double s, out double b)

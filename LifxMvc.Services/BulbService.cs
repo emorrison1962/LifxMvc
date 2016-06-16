@@ -34,6 +34,7 @@ namespace LifxMvc.Services
 
 		public void Initialize(IBulb bulb)
 		{
+			this.DeviceGetVersion(bulb);
 			this.LightGet(bulb);
 			this.DeviceGetGroup(bulb);
 			this.DeviceGetLocation(bulb);
@@ -232,7 +233,7 @@ namespace LifxMvc.Services
 		public static void Set(this IBulb bulb, DeviceStateVersionResponse r)
 		{
 			bulb.Vendor = r.Vendor;
-			bulb.Product = r.Product;
+			bulb.Product = (LifxProductEnum)r.Product;
 			bulb.Version = r.Version;
 		}
 
@@ -265,7 +266,12 @@ namespace LifxMvc.Services
 			bulb.Brightness = r.Brightness;
 			bulb.Kelvin = r.Kelvin;
 
-			var hsbk = new HSBK(r.Hue, r.Saturation, r.Brightness, r.Kelvin);
+			IHSBK hsbk = null;
+			if (bulb.Product.IsColor())
+				hsbk = new HSBK(r.Hue, r.Saturation, r.Brightness);
+			else
+				hsbk = new HSBK(r.Kelvin, r.Brightness);
+
 			bulb.SetHSBK(hsbk);
 		}
 

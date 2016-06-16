@@ -84,7 +84,7 @@ namespace LifxMvc.Domain.Mocks
 		public DateTime LastSeen { get; set; }
 
 		public uint Vendor { get; set; }
-		public uint Product { get; set; }
+		public LifxProductEnum Product { get; set; }
 		public uint Version { get; set; }
 
 
@@ -120,7 +120,7 @@ namespace LifxMvc.Domain.Mocks
 			Service = byte.MaxValue;
 			LastSeen = DateTime.MaxValue;
 			Vendor = UInt32.MaxValue;
-			Product = UInt32.MaxValue;
+			Product = LifxProductEnum.Unknown;
 			Version = UInt32.MaxValue;
 
 		}
@@ -142,6 +142,14 @@ namespace LifxMvc.Domain.Mocks
 		{
 			throw new NotImplementedException();
 		}
+		public bool IsColor
+		{
+			get
+			{
+				return this.Product.IsColor();
+			}
+		}
+
 	}
 }
 

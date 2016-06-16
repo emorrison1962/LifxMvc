@@ -163,7 +163,7 @@ namespace LifxMvc.Services.Tests
 						if (bulb.Label == "1 o'clock")
 							new object();
 
-						var hsbk = new HSBK(bulb.Hue, bulb.Saturation, bulb.Brightness, bulb.Kelvin);
+						var hsbk = bulb.HSBK;
 						//hsbk.RotateHue();
 						BulbService.LightSetColor(bulb, hsbk);
 					}

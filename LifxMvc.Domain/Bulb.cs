@@ -46,7 +46,18 @@ namespace LifxMvc.Domain
 		/// </summary>
 		public UInt16 Kelvin { get; set; }
 
-		public IHSBK HSBK { get { return new HSBK(this.Hue, this.Saturation, this.Brightness, this.Kelvin); } }
+		public IHSBK HSBK
+		{
+			get
+			{
+				IHSBK result = null;
+				if (this.Product.IsColor())
+					result = new HSBK(this.Hue, this.Saturation, this.Brightness);
+				else
+					result = new HSBK(this.Kelvin, this.Brightness);
+				return result;
+			}
+		}
 
 		/// <summary>
 		/// Power state
@@ -95,9 +106,16 @@ namespace LifxMvc.Domain
 		public DateTime LastSeen {get;set;}
 
 		public uint Vendor { get; set; }
-		public uint Product { get; set; }
+		public LifxProductEnum Product { get; set; }
 		public uint Version { get; set; }
 
+		public bool IsColor
+		{
+			get
+			{
+				return this.Product.IsColor();
+			}
+		}
 
 		public Bulb()
 		{
@@ -131,7 +149,7 @@ namespace LifxMvc.Domain
 			Service = byte.MaxValue;
 			LastSeen = DateTime.MaxValue;
 			Vendor = UInt32.MaxValue;
-			Product = UInt32.MaxValue;
+			Product = LifxProductEnum.Unknown;
 			Version = UInt32.MaxValue;
 
 		}
@@ -145,10 +163,16 @@ namespace LifxMvc.Domain
 
 		public void SetHSBK(IHSBK hsbk)
 		{
-			this.Hue = hsbk.Hue;
-			this.Saturation = hsbk.Saturation;
-			this.Brightness = hsbk.Brightness;
-			this.Kelvin = hsbk.Kelvin;
+			if (this.Product.IsColor())
+			{
+				this.Hue = hsbk.Hue;
+				this.Saturation = hsbk.Saturation;
+				this.Brightness = hsbk.Brightness;
+			}
+			else
+			{
+				this.Kelvin = hsbk.Kelvin;
+			}
 
 			var color = hsbk.ToColor();
 			this.SetColor(color);

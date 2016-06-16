@@ -70,7 +70,7 @@ namespace LifxNet
 			var s = BitConverter.ToUInt16(payload, 4);
 			var b = BitConverter.ToUInt16(payload, 6);
 			var k = BitConverter.ToUInt16(payload, 8);
-			this.Color = new HSBK(h, s, b, k);
+			this.Color = HSBK.Create(h, s, b, k);
 
 			this.Period = BitConverter.ToUInt16(payload, 10);
 			this.Cycles = BitConverter.ToSingle(payload, 12);

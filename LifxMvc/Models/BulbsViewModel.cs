@@ -76,7 +76,7 @@ namespace LifxMvc.Models
 			this.Brightness = bulb.Brightness;
 
 			this.Group = bulb.Group;
-			//this.Group = bulb.Product.ToString();
+			this.Group = bulb.Product.ToString();
 			this.Hue = bulb.Hue;
 			this.IsOn = bulb.IsOn;
 			this.Kelvin = bulb.Kelvin;

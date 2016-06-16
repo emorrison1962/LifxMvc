@@ -7,6 +7,7 @@
 		ushort Kelvin { get; }
 		ushort Saturation { get; }
 
+		bool IsColor { get; }
 		void GetHSB(out double h, out double s, out double b);
 
 	}

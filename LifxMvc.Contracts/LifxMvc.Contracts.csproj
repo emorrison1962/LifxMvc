@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\LifxProductEnum.cs" />
     <Compile Include="Domain\IBulb.cs" />
     <Compile Include="Domain\IHSBK.cs" />
     <Compile Include="Services\IBulbService.cs" />

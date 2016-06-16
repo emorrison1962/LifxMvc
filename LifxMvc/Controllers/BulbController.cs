@@ -99,10 +99,9 @@ namespace LifxMvc.Controllers
 		{
 			var isOn = this.Bulbs.Where(x => x.IsOn).Count() > 0;
 
-			var svc = this.BulbService;
 			foreach (var bulb in Bulbs)
 			{
-				svc.LightSetPower(bulb, !isOn);
+				this.BulbService.LightSetPower(bulb, !isOn);
 			}
 			return RedirectToAction("Index");
 		}
@@ -112,10 +111,9 @@ namespace LifxMvc.Controllers
 			var bulbs = this.Bulbs.Where(x => x.Group == name);
 			var isOn = bulbs.Where(x => x.IsOn).Count() > 0;
 			
-			var svc = this.BulbService;
 			foreach (var bulb in bulbs)
 			{
-				svc.LightSetPower(bulb, !isOn);
+				this.BulbService.LightSetPower(bulb, !isOn);
 			}
 
 			return RedirectToAction("Index");
@@ -125,8 +123,7 @@ namespace LifxMvc.Controllers
 		{
 			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
 
-			var svc = this.BulbService;
-			svc.LightSetPower(bulb, !bulb.IsOn);
+			this.BulbService.LightSetPower(bulb, !bulb.IsOn);
 			return RedirectToAction("Index");
 		}
 
@@ -134,10 +131,9 @@ namespace LifxMvc.Controllers
 		{
 			var isOn = this.Bulbs.Where(x => x.IsOn).Count() > 0;
 
-			var svc = this.BulbService;
 			foreach (var bulb in Bulbs)
 			{
-				svc.LightSetPower(bulb, !isOn);
+				this.BulbService.LightSetPower(bulb, !isOn);
 			}
 
 			var vm = new BulbsViewModel(this.Bulbs);
@@ -150,10 +146,9 @@ namespace LifxMvc.Controllers
 			var bulbs = this.Bulbs.Where(x => x.Group == name);
 			var isOn = bulbs.Where(x => x.IsOn).Count() > 0;
 
-			var svc = this.BulbService;
 			foreach (var bulb in bulbs)
 			{
-				svc.LightSetPower(bulb, !isOn);
+				this.BulbService.LightSetPower(bulb, !isOn);
 			}
 
 			var vm = new BulbsViewModel(this.Bulbs);
@@ -165,8 +160,7 @@ namespace LifxMvc.Controllers
 		{
 			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
 
-			var svc = this.BulbService;
-			svc.LightSetPower(bulb, !bulb.IsOn);
+			this.BulbService.LightSetPower(bulb, !bulb.IsOn);
 
 			var vm = new BulbsViewModel(this.Bulbs);
 			var result = Json(vm, JsonRequestBehavior.AllowGet);
@@ -177,10 +171,9 @@ namespace LifxMvc.Controllers
 		{
 
 			var bulb = this.Bulbs.FirstOrDefault(x => x.BulbId == bulbId);
-			var svc = this.BulbService;
 
 			var c = this.ParseColor(color);
-			svc.LightSetColor(bulb, c);
+			this.BulbService.LightSetColor(bulb, c);
 
 			var vm = new BulbsViewModel(this.Bulbs);
 			var result = Json(vm, JsonRequestBehavior.AllowGet);
@@ -195,7 +188,7 @@ namespace LifxMvc.Controllers
 
 			const int EXPECTED_LENGTH = 3;
 			if (EXPECTED_LENGTH != values.Length)
-				throw new Exception("Unexpected result parsing color.");
+				throw new Exception("Error parsing color.");
 
 			var result = Color.FromArgb(Convert.ToInt32(values[0]),
 				Convert.ToInt32(values[1]),
