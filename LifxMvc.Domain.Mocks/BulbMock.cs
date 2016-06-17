@@ -149,6 +149,14 @@ namespace LifxMvc.Domain.Mocks
 				return this.Product.IsColor();
 			}
 		}
+		public bool IsKelvin
+		{
+			get
+			{
+				return !this.IsColor;
+			}
+		}
+
 
 	}
 }

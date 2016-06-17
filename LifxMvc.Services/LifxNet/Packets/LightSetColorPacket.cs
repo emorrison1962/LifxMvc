@@ -22,7 +22,8 @@ namespace LifxNet
 		public LightSetColorPacket(IBulb bulb, IHSBK hsbk)
 			: base(bulb)
 		{
-
+			if (null == hsbk)
+				throw new ArgumentNullException();
 
 			this.Hue = hsbk.Hue;
 			this.Saturation = hsbk.Saturation;

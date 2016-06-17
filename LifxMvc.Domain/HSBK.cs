@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static LifxMvc.Domain.ColorExtensions;
 
 namespace LifxMvc.Domain
 {
@@ -48,6 +49,11 @@ namespace LifxMvc.Domain
 		public static HSBK Create(UInt16 h, UInt16 s, UInt16 b, UInt16 k)
 		{
 			return new HSBK(h, s, b, k);
+		}
+
+		public static HSBK Create(KelvinColor kc)
+		{
+			return new HSBK(kc.Temperature, UInt16.MaxValue);
 		}
 
 		public void GetHSB(out double h, out double s, out double b)

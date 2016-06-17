@@ -56,8 +56,12 @@
 									{{ bulb.Label }}
 								</td>
 								<td>
+									@*<button class="btn btn-sm" colorpicker="rgb" ng-model=bulb.ColorString ng-change=bulbColorChanged(bulb) ng-style=getButtonBackground(bulb.ColorString)> </button>*@
+									<spectrum-colorpicker ng-model=bulb.ColorString ng-show=bulb.IsColor ng-change=bulbColorChanged(bulb) ></spectrum-colorpicker>
+									<spectrum-colorpicker ng-model=bulb.ColorString ng-hide=bulb.IsColor palette=palette
+														  options="{showPaletteOnly: true, showSelectionPalette: false}" ng-change=bulbColorChanged(bulb) ></spectrum-colorpicker>
+
 									{{ bulb.Group }}
-									<button class="btn btn-sm" colorpicker="rgb" ng-model=bulb.ColorString ng-change=bulbColorChanged(bulb) ng-style=getButtonBackground(bulb.ColorString)> </button>
 								</td>
 								<td>
 									{{ bulb.Saturation }}

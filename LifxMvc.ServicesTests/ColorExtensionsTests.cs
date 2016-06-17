@@ -11,6 +11,30 @@ using System.Diagnostics;
 using Colorspace;
 using LifxMvc.Domain;
 
+namespace LifxMvc.Domain.Tests
+{
+	[TestClass()]
+	public class ColorExtensionsTests
+	{
+		[TestMethod()]
+		public void ColorFromTemperatureTest()
+		{
+			var list = new List<int>() { 2500, 2750, 3000, 3200, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000 };
+			foreach (var k in list)
+			{
+				var color = ColorExtensions.ColorFromTemperature(k);
+				const string RGB_FORMAT = "\"rgb({0},{1},{2})\",";
+				var s = string.Format(RGB_FORMAT, color.R, color.G, color.B);
+				Debug.WriteLine(s);
+
+				//const string RGB_FORMAT = "Kelvin{0} = {1},";
+				//var s = string.Format(RGB_FORMAT, k, color.ToArgb());
+				//Debug.WriteLine(s);
+			}
+		}
+	}
+}
+
 namespace LifxMvc.Services.Tests
 {
 	[TestClass()]

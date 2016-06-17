@@ -43,5 +43,6 @@ namespace LifxMvc.Domain
 
 		void SetHSBK(IHSBK hsbk);
 		bool IsColor { get; }
+		bool IsKelvin { get; }
 	}
 }

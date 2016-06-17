@@ -68,6 +68,7 @@ namespace LifxMvc.Models
 		public UInt16 Brightness { get; set; }
 		public UInt16 Kelvin { get; set; }
 		public bool IsOn { get; set; }
+		public bool IsColor { get; set; }
 		public string Label { get; set; }
 
 		public BulbViewModel(IBulb bulb)
@@ -86,6 +87,7 @@ namespace LifxMvc.Models
 			this.IPEndPoint = bulb.IPEndPoint.Address.ToString();
 			this.HSBK = bulb.HSBK;
 			this.ColorString = string.Format("rgb({0},{1},{2})", bulb.Color.R, bulb.Color.G, bulb.Color.B);
+			this.IsColor = bulb.IsColor;
 			
 
 		}

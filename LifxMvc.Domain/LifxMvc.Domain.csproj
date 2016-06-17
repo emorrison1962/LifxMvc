@@ -49,6 +49,7 @@
     <Compile Include="Bulb.cs" />
     <Compile Include="ColorExtensions.cs" />
     <Compile Include="HSBK.cs" />
+    <Compile Include="KelvinColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

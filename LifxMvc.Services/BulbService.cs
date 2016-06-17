@@ -83,15 +83,6 @@ namespace LifxMvc.Services
 		}
 
 		
-		public void LightSetColor(IBulb bulb, IHSBK hsbk)
-		{
-			var packet = new LightSetColorPacket(bulb, hsbk);
-			packet.Duration = 100;
-			this.SendAsync(bulb, packet);
-
-			bulb.SetColor(hsbk);
-		}
-
 		public void GetHostInfo(IBulb bulb)
 		{
 			var packet = new DeviceGetHostInfoPacket(bulb);
@@ -152,9 +143,18 @@ namespace LifxMvc.Services
 			this.SendAsync(bulb, packet);
 		}
 
+		void LightSetColor(IBulb bulb, IHSBK hsbk)
+		{
+			var packet = new LightSetColorPacket(bulb, hsbk);
+			packet.Duration = 100;
+			this.SendAsync(bulb, packet);
+
+			bulb.SetColor(hsbk);
+		}
+
 		public void LightSetColor(IBulb bulb, Color color)
 		{
-			var hsbk = color.ToHSBK();
+			var hsbk = color.ToHSBK(bulb.IsKelvin);
 			LightSetColor(bulb, hsbk);
 		}
 

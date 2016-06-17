@@ -28,11 +28,12 @@ namespace LifxMvc
 					  "~/Scripts/angular-route.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/spectrum").Include(
-					"~/Scripts/bootstrap-colorpicker-module.js"));
+					"~/Scripts/spectrum.js",
+					"~/Scripts/angular-spectrum-colorpicker.js"));
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
+					  "~/Content/spectrum.css",
 					  "~/Content/bootstrap.css",
-					 "~/Content/colorpicker.css",
 					  "~/Content/site.css"));
 		}
 	}

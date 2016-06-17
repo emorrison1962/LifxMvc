@@ -6,18 +6,27 @@ using Windows = System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace LifxMvc.Domain
 {
 	public static class ColorExtensions
 	{
-		static public HSBK ToHSBK(this Windows.Color wrgb)
+		static public HSBK ToHSBK(this Windows.Color wrgb, bool isKelvin = false)
 		{
-			var rgb = new ColorRGB(wrgb.ToArgb());
-			var hsl = new ColorHSL(rgb);
-			hsl.ToString();
-
-			var result = new HSBK(hsl.H, hsl.S, hsl.L);
+			HSBK result = null;
+			if (isKelvin)
+			{
+				var kc = wrgb.ToKelvinColor();
+#warning FIXME: Need Brightness....
+				result = new HSBK(kc.Temperature, UInt16.MaxValue);
+			}
+			else
+			{
+				var rgb = new ColorRGB(wrgb.ToArgb());
+				var hsl = new ColorHSL(rgb);
+				result = new HSBK(hsl.H, hsl.S, hsl.L);
+			}
 			return result;
 		}
 
@@ -26,6 +35,12 @@ namespace LifxMvc.Domain
 			double h, s, b;
 			hsbk.GetHSB(out h, out s, out b);
 			var result = new ColorHSL(h, s, b);
+			return result;
+		}
+
+		static public KelvinColor ToKelvinColor(this Windows.Color color)
+		{
+			var result = KelvinColor.Create(color);
 			return result;
 		}
 
@@ -49,7 +64,7 @@ namespace LifxMvc.Domain
 
 		//Given a temperature (in Kelvin), estimate an RGB equivalent
 		// Taken from: http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
-		static Windows.Color ColorFromTemperature(int tmpKelvin)
+		public static Windows.Color ColorFromTemperature(int tmpKelvin)
 		{
 			double tmpCalc;
 			double r, g, b;

@@ -1,6 +1,27 @@
-﻿var lifxMvcApp = angular.module("lifxMvcApp", ['colorpicker.module']);
+﻿var lifxMvcApp = angular.module("lifxMvcApp", ['angularSpectrumColorpicker']);
 
 var indexController = lifxMvcApp.controller("bulbIndexController", ['$scope', '$window', '$log', '$http', function ($scope, $window, $log, $http) {
+
+	var palette = [
+				"rgb(255,159,70)",
+				"rgb(255,167,87)",
+				"rgb(255,177,110)",
+				"rgb(255,184,123)",
+				"rgb(255,193,141)",
+				"rgb(255,206,166)",
+				"rgb(255,218,187)",
+				"rgb(255,228,206)",
+				"rgb(255,237,222)",
+				"rgb(255,246,237)",
+				"rgb(255,254,250)",
+				"rgb(243,242,255)",
+				"rgb(230,235,255)",
+				"rgb(221,230,255)",
+				"rgb(215,226,255)",
+				"rgb(210,223,255)"
+	];
+	$scope.palette = palette;
+
 
 	$scope.getModel = function () {
 		$http.get('/Bulb/IndexJson')

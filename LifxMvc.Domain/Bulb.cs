@@ -117,6 +117,14 @@ namespace LifxMvc.Domain
 			}
 		}
 
+		public bool IsKelvin
+		{
+			get
+			{
+				return !this.IsColor;
+			}
+		}
+
 		public Bulb()
 		{
 			TargetMacAddress = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
