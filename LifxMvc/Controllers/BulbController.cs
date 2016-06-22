@@ -127,6 +127,14 @@ namespace LifxMvc.Controllers
 			return RedirectToAction("Index");
 		}
 
+		public ActionResult DiscoverJson()
+		{
+			this.CacheService.Remove(BULBS);
+			var vm = new BulbsViewModel(this.Bulbs);
+			var result = Json(vm, JsonRequestBehavior.AllowGet);
+			return result;
+		}
+
 		public JsonResult TogglePowerAllJson()
 		{
 			var isOn = this.Bulbs.Where(x => x.IsOn).Count() > 0;
@@ -177,6 +185,13 @@ namespace LifxMvc.Controllers
 
 			var vm = new BulbsViewModel(this.Bulbs);
 			var result = Json(vm, JsonRequestBehavior.AllowGet);
+			return result;
+		}
+
+		public JsonResult GetKelvinPalette()
+		{
+			var palette = KelvinColor.GetPalette();
+			var result = Json(palette, JsonRequestBehavior.AllowGet);
 			return result;
 		}
 

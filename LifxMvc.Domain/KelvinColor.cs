@@ -121,16 +121,16 @@ namespace LifxMvc.Domain
 			return kelvinTemp;
 		}
 
-		public List<string> GetPalette()
+		static public List<string> GetPalette()
 		{
 			const string RGB_FORMAT = "\"rgb({0},{1},{2})\",";
 			var result = new List<string>();
-			var colors = this.GetColors();
+			var colors = GetColors();
 			colors.ForEach(x => result.Add(string.Format(RGB_FORMAT, x.R, x.G, x.B)));
 			return result;
 		}
 
-		List<Color> GetColors()
+		static List<Color> GetColors()
 		{
 			var result = new List<Color>()
 				{

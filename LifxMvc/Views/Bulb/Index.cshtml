@@ -8,9 +8,15 @@
 <div ng-controller="bulbIndexController">
 	<div ng-view>
 
+		
 		<div>
-
-
+			<a class="btn btn-sm btn-default aria-label='Discover Bulbs" ng-click="discoverBulbs()">
+				<span class="glyphicon glyphicon-search"></span>
+			</a>
+			Discover
+		</div>
+		
+		<div>
 			<a class="btn btn-sm btn-default aria-label='Toggle Power on this Bulb" ng-click="togglePowerAll()">
 				<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: areAnyOn() ? 'white' : 'gray' }"></span>
 			</a>
@@ -22,7 +28,6 @@
 				<th>
 					Group
 				</th>
-				<th>Bulbs</th>
 				<th></th>
 			</tr>
 
@@ -32,10 +37,17 @@
 						<span class="glyphicon glyphicon-off" aria-hidden="true" ng-style="{ color: isGroupOn(group) ? 'white' : 'gray' }"></span>
 					</a>
 					{{ group.Name }}
+					<a role="button" data-toggle="collapse" 
+					   data-target=#bulbsTableDiv-{{$index}} aria-expanded="false" aria-controls="bulbsTable"
+					   ng-click="group.isCollapsed = !group.isCollapsed">
+						<span ng-show=group.isCollapsed class="glyphicon glyphicon-chevron-right"></span>@*expand verb*@
+						<span ng-show=!group.isCollapsed class="glyphicon glyphicon-chevron-down"></span>@*collapse verb*@
+					</a>
 				</td>
 
 				<td>
-					<div class="well well-sm">
+					<div id="bulbsTableDiv-{{$index}}" class="well well-sm collapse">
+						Bulbs
 						<table id="bulbsTable" class="table table-bordered">
 							<tr>
 								<th>Label</th>
@@ -43,7 +55,6 @@
 								<th>Saturation</th>
 								<th>Brightness</th>
 								<th>Kelvin</th>
-								<th></th>
 							</tr>
 
 							<tr ng-repeat="bulb in group.Bulbs">
@@ -57,9 +68,10 @@
 								</td>
 								<td>
 									@*<button class="btn btn-sm" colorpicker="rgb" ng-model=bulb.ColorString ng-change=bulbColorChanged(bulb) ng-style=getButtonBackground(bulb.ColorString)> </button>*@
-									<spectrum-colorpicker ng-model=bulb.ColorString ng-show=bulb.IsColor ng-change=bulbColorChanged(bulb) ></spectrum-colorpicker>
-									<spectrum-colorpicker ng-model=bulb.ColorString ng-hide=bulb.IsColor palette=palette
-														  options="{showPaletteOnly: true, showSelectionPalette: false}" ng-change=bulbColorChanged(bulb) ></spectrum-colorpicker>
+									<spectrum-colorpicker ng-model=bulb.ColorString ng-change=bulbColorChanged(bulb) ng-show=bulb.IsColor 
+														  options="{showButtons: false}"></spectrum-colorpicker>
+									<spectrum-colorpicker ng-model=bulb.ColorString ng-change=bulbColorChanged(bulb) ng-hide=bulb.IsColor 
+														  options="{showPaletteOnly: true, showSelectionPalette: false}" palette=palette ></spectrum-colorpicker>
 
 									{{ bulb.Group }}
 								</td>
@@ -72,23 +84,11 @@
 								<td>
 									{{ bulb.Kelvin }}
 								</td>
-								<td>
-									Bulb Edit, Details, Delete
-									@*@Html.ActionLink("Edit", "Edit", new { id = bulb.BulbId }) |
-										@Html.ActionLink("Details", "Details", new { id = bulb.BulbId }) |
-										@Html.ActionLink("Delete", "Delete", new { id = bulb.BulbId })*@
-								</td>
 							</tr>
 
 						</table>
 					</div>
 
-				</td>
-				<td>
-					Group Edit, Details, Delete
-					@*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-						@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-						@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
 				</td>
 			</tr>
 
