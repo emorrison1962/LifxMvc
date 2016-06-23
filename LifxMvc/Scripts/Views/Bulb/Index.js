@@ -31,12 +31,15 @@ var indexController = lifxMvcApp.controller("bulbIndexController", ['$scope', '$
 	};
 
 	$scope.discoverBulbs = function () {
+		$scope.isBusy = true;
 		$http.post('/Bulb/DiscoverJson')
 			.success(function (result) {
 				$scope.groups = result.Groups;
+				$scope.isBusy = false;
 			})
 			.error(function (data, status) {
 				$log.error(data);
+				$scope.isBusy = false;
 			});
 	};
 

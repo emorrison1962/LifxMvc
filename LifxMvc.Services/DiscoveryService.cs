@@ -1,5 +1,6 @@
 ﻿using LifxMvc.Domain;
 using LifxMvc.Services;
+using LifxMvc.Services.Discovery;
 using LifxMvc.Services.UdpHelper;
 using LifxNet;
 using System;
@@ -31,14 +32,14 @@ namespace LifxMvc.Services
 
 			this.Wait = new ManualResetEventSlim(false);
 			this._sw = Stopwatch.StartNew();
-			udp.BroadcastAndListen(packet, expectedCount, 10 * 1000);
+			udp.DiscoverBulbs(packet, expectedCount, 10 * 1000);
 			var result = this.Bulbs;
 
 			return result;
 		}
 
 		Stopwatch _sw;
-		private void Udp_DeviceDiscovered(object sender, DiscoveryUdpHelper.DiscoveryEventArgs e)
+		private void Udp_DeviceDiscovered(object sender, DiscoveryEventArgs e)
 		{
 			var ctx = e.DiscoveryContext;
 			if (null == this.Bulbs.FirstOrDefault(x => x.IPEndPoint.ToString() == ctx.Sender.ToString()))

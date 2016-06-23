@@ -1,4 +1,5 @@
-﻿using LifxNet;
+﻿using LifxMvc.Services.Discovery;
+using LifxNet;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,19 +14,23 @@ namespace LifxMvc.Services.UdpHelper
 {
 	public class DiscoveryUdpHelper : IDisposable
 	{
+		class ListenContext
+		{
+			public int ExpectedCount { get; set; }
+			public int Timeout { get; set; }
+
+			public ListenContext(int expectedCount, int timeout)
+			{
+				this.ExpectedCount = expectedCount;
+				this.Timeout = timeout;
+			}
+		}
+
 		private const int PORT_NO = 56700;
 
 		Task ListeningTask { get; set; }
 		ManualResetEventSlim StopListeningEvent { get; set; }
 
-		public class DiscoveryEventArgs : EventArgs
-		{
-			public DiscoveryContext DiscoveryContext { get; private set; }
-			public DiscoveryEventArgs(DiscoveryContext discoveryContext)
-			{
-				this.DiscoveryContext = discoveryContext;
-			}
-		}
 		public event EventHandler<DiscoveryEventArgs> DeviceDiscovered;
 
 		public DiscoveryUdpHelper()
@@ -34,7 +39,7 @@ namespace LifxMvc.Services.UdpHelper
 		}
 
 		bool _discoveryComplete = false;
-		public void BroadcastAndListen(LifxPacketBase packet, int expectedCount, int timeout)
+		public void DiscoverBulbs(LifxPacketBase packet, int expectedCount, int timeout)
 		{
 			try
 			{
@@ -77,7 +82,7 @@ namespace LifxMvc.Services.UdpHelper
 			}
 		}
 
-		public void StartListening(int expectedCount, int timeout)
+		void StartListening(int expectedCount, int timeout)
 		{
 			this.StopListeningEvent.Reset();
 
@@ -91,18 +96,7 @@ namespace LifxMvc.Services.UdpHelper
 			this.StopListeningEvent.Set();
 		}
 
-		class ListenContext
-		{
-			public int ExpectedCount { get; set; }
-			public int Timeout { get; set; }
-
-			public ListenContext(int expectedCount, int timeout)
-			{
-				this.ExpectedCount = expectedCount;
-				this.Timeout = timeout;
-			}
-		}
-		public void Listen(object ob)
+		void Listen(object ob)
 		{
 			var listenCtx = ob as ListenContext;
 			int timeout = listenCtx.Timeout;
@@ -232,20 +226,6 @@ namespace LifxMvc.Services.UdpHelper
 		#endregion
 	}//class 
 
-	public class DiscoveryContext
-	{
-		public int ExpectedCount { get; set; }
-		public IPEndPoint Sender { get; private set; }
-		public DeviceStateServiceResponse Response { get; private set; }
-		public bool CancelDiscovery { get; set; }
-
-		public DiscoveryContext(IPEndPoint sender, DeviceStateServiceResponse response, int expectedCount)
-		{
-			this.Sender = sender;
-			this.Response = response;
-			this.ExpectedCount = expectedCount;
-		}
-	}//class
 
 
 }//ns

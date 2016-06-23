@@ -66,6 +66,8 @@
     <Compile Include="BulbServiceMock.cs" />
     <Compile Include="DiscoveryService.cs" />
     <Compile Include="DiscoveryServiceMock.cs" />
+    <Compile Include="Discovery\DiscoveryContext.cs" />
+    <Compile Include="Discovery\DiscoveryEventArgs.cs" />
     <Compile Include="HSLConverter.cs" />
     <Compile Include="LifxNet\Constants.cs" />
     <Compile Include="LifxNet\Extensions.cs" />
