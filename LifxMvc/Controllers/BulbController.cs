@@ -66,9 +66,9 @@ namespace LifxMvc.Controllers
 		// GET: Bulb
 		public ActionResult Index()
 		{
-			var bulbs = this.Bulbs;
-			var vm = new BulbsViewModel(bulbs);
-			//var vm = new BulbsViewModel();
+			//var bulbs = this.Bulbs;
+			//var vm = new BulbsViewModel(bulbs);
+			var vm = new BulbsViewModel();
 			return View(vm.Groups);
 		}
 

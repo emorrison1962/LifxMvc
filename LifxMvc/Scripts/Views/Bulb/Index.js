@@ -2,11 +2,12 @@
 
 var indexController = lifxMvcApp.controller("bulbIndexController", ['$scope', '$window', '$log', '$http', function ($scope, $window, $log, $http) {
 
-
+	$scope.isBusy = false;
 	//Server methods
 	$scope.getModel = function () {
 		$http.get('/Bulb/IndexJson')
 			.success(function (result) {
+				$scope.isBusy = false;
 				$scope.groups = result.Groups;
 				var arr = jQuery.makeArray()
 				for (var i = 0; i < $scope.groups.length; ++i) {
@@ -107,6 +108,7 @@ var indexController = lifxMvcApp.controller("bulbIndexController", ['$scope', '$
 	};
 
 
+	$scope.isBusy = true;
 	$scope.getPalette();
 	$scope.getModel();
 

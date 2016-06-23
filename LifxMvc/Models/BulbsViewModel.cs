@@ -30,6 +30,7 @@ namespace LifxMvc.Models
 			}
 
 		}
+
 	}
 
 	public class GroupViewModel

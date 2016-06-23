@@ -163,6 +163,8 @@
     <Content Include="Content\colorpicker.css" />
     <Content Include="Content\colorpicker.min.css" />
     <Content Include="Content\spectrum.css" />
+    <Content Include="Images\477.gif" />
+    <Content Include="Images\ajax-loader.gif" />
     <Content Include="Scripts\spectrum.js" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Scripts\angular-spectrum-colorpicker.js" />
