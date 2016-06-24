@@ -33,6 +33,8 @@ namespace LifxMvc.Services
 			this.Wait = new ManualResetEventSlim(false);
 			this._sw = Stopwatch.StartNew();
 			udp.DiscoverBulbs(packet, expectedCount, 10 * 1000);
+			_sw.Stop();
+			Debug.WriteLine("DiscoveryService: DiscoverAsync " + _sw.Elapsed);
 			var result = this.Bulbs;
 
 			return result;
@@ -60,10 +62,6 @@ namespace LifxMvc.Services
 				Debug.WriteLine(Bulbs.Count);
 				if (this.Bulbs.Count == ctx.ExpectedCount)
 				{
-					_sw.Stop();
-					Debug.WriteLine(_sw.ElapsedMilliseconds);
-
-
 					var udp = sender as DiscoveryUdpHelper;
 					udp.DeviceDiscovered -= this.Udp_DeviceDiscovered;
 					ctx.CancelDiscovery = true;

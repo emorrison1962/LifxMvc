@@ -56,7 +56,11 @@ namespace LifxMvc.Services.Tests
 		{
 			var svc = new DiscoveryService();
 
+			var sw = Stopwatch.StartNew();
 			var result = svc.DiscoverAsync(EXPECTED_BULB_COUNT);
+			sw.Stop();
+			Debug.Write(sw.Elapsed);
+
 			Bulbs = new List<IBulb>(result);
 			Bulbs.Sort(new BulbComparer());
 

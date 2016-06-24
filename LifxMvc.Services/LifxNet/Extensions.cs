@@ -11,6 +11,7 @@ namespace LifxNet
 {
 	static public class Extensions
 	{
+		[Conditional("TRACE_PACKETS")]
 		static public void TraceSent(this LifxPacketBase packet, EndPoint localEndPoint)
 		{
 			var msg = string.Format("{0} -> {1}: {2}",
@@ -21,6 +22,7 @@ namespace LifxNet
 			Debug.WriteLine(msg);
 		}
 
+		[Conditional("TRACE_PACKETS")]
 		static public void TraceReceived(this LifxResponseBase response, EndPoint localEndPoint, bool unexpectedResponse = false)
 		{
 			if (response is LightStateResponse)
