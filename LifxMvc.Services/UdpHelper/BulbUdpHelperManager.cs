@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,7 +11,7 @@ namespace LifxMvc.Services.UdpHelper
 	public class UdpHelperManager : IDisposable
 	{
 		static public UdpHelperManager Instance { get; private set; }
-		Dictionary<IPEndPoint, BulbUdpHelper> Dictionary { get; set; }
+		ConcurrentDictionary<string, BulbUdpHelper> Dictionary { get; set; }
 
 		DiscoveryUdpHelper _discoveryUdpHelper;
 		public DiscoveryUdpHelper DiscoveryUdpHelper
@@ -30,7 +31,7 @@ namespace LifxMvc.Services.UdpHelper
 
 		UdpHelperManager()
 		{
-			Dictionary = new Dictionary<IPEndPoint, BulbUdpHelper>();
+			this.Dictionary = new ConcurrentDictionary<string , BulbUdpHelper>();
 		}
 
 		public BulbUdpHelper this[IPEndPoint key]
@@ -38,17 +39,21 @@ namespace LifxMvc.Services.UdpHelper
 			get { return this.Lookup(key); }
 		}
 
-		BulbUdpHelper Lookup(IPEndPoint key)
+		BulbUdpHelper Lookup(IPEndPoint endPoint)
 		{
 			BulbUdpHelper result = null;
+			var key = endPoint.Address.ToString();
 			if (this.Dictionary.ContainsKey(key))
 			{
 				result = this.Dictionary[key];
 			}
 			else
 			{
-				result = new BulbUdpHelper(key);
-				this.Dictionary.Add(key, result);
+				result = new BulbUdpHelper(endPoint);
+				Debug.Assert(null != result);
+				Debug.Assert(null != key);
+				Debug.Assert(null != this.Dictionary);
+				this.Dictionary[key] = result;
 			}
 			return result;
 		}

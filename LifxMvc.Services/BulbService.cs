@@ -1,15 +1,8 @@
 ﻿using LifxMvc.Domain;
-using LifxMvc.Services;
 using LifxMvc.Services.UdpHelper;
 using LifxNet;
 using LifxNet.Domain;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace LifxMvc.Services

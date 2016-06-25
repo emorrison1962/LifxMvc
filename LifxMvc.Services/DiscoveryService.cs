@@ -1,15 +1,12 @@
 ﻿using LifxMvc.Domain;
-using LifxMvc.Services;
 using LifxMvc.Services.Discovery;
 using LifxMvc.Services.UdpHelper;
 using LifxNet;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,31 +14,48 @@ namespace LifxMvc.Services
 {
 	public class DiscoveryService : IDisposable, IDiscoveryService
 	{
-		List<IBulb> Bulbs { get; set; }
+		ConcurrentBag<IBulb> Bulbs { get; set; }
 		ManualResetEventSlim Wait { get; set; }
 
 
 
 		public List<IBulb> DiscoverAsync(int expectedCount)
 		{
-			this.Bulbs = new List<IBulb>();
+			this.Bulbs = new ConcurrentBag<IBulb>();
+			this.BulbInitializationTasks = new ConcurrentBag<Task>();
 			var packet = new DeviceGetServicePacket();
 
 			var udp = UdpHelperManager.Instance.DiscoveryUdpHelper;
 			udp.DeviceDiscovered += Udp_DeviceDiscovered;
 
-			this.Wait = new ManualResetEventSlim(false);
+			//this.Wait = new ManualResetEventSlim(false);
+			const int TIMEOUT = 10 * 1000;
+			udp.DiscoverBulbs(packet, expectedCount, TIMEOUT);
+			//var success = this.Wait.Wait(TIMEOUT);
+
 			this._sw = Stopwatch.StartNew();
-			udp.DiscoverBulbs(packet, expectedCount, 10 * 1000);
+			var taskArr = this.BulbInitializationTasks.ToArray();
+			Task.WaitAll(taskArr);
 			_sw.Stop();
 			Debug.WriteLine("DiscoveryService: DiscoverAsync " + _sw.Elapsed);
-			var result = this.Bulbs;
+
+			Debug.Assert(Bulbs.Count == expectedCount);
+			var result = this.Bulbs.ToList();
 
 			return result;
 		}
 
 		Stopwatch _sw;
+		ConcurrentBag<Task> BulbInitializationTasks { get; set; }
 		private void Udp_DeviceDiscovered(object sender, DiscoveryEventArgs e)
+		{
+			var action = new Action(()=> this.Udp_DeviceDiscoveredAsync(sender, e));
+			var task = Task.Factory.StartNew(action);
+			BulbInitializationTasks.Add(task);
+
+		}
+
+		private void Udp_DeviceDiscoveredAsync(object sender, DiscoveryEventArgs e)
 		{
 			var ctx = e.DiscoveryContext;
 			if (null == this.Bulbs.FirstOrDefault(x => x.IPEndPoint.ToString() == ctx.Sender.ToString()))
@@ -55,20 +69,22 @@ namespace LifxMvc.Services
 					LastSeen = DateTime.UtcNow
 				};
 
+				this.Bulbs.Add(bulb);
 				var bulbSvc = new BulbService();
 				bulbSvc.Initialize(bulb);
 
-				this.Bulbs.Add(bulb);
 				Debug.WriteLine(Bulbs.Count);
 				if (this.Bulbs.Count == ctx.ExpectedCount)
 				{
 					var udp = sender as DiscoveryUdpHelper;
 					udp.DeviceDiscovered -= this.Udp_DeviceDiscovered;
 					ctx.CancelDiscovery = true;
-					this.Wait.Set();
+					//this.Wait.Set();
 				}
 			}
 		}
+
+
 
 		#region IDisposable Support
 		private bool disposedValue = false; // To detect redundant calls

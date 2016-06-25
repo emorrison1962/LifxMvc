@@ -2,7 +2,7 @@
 using LifxMvc.Services.Discovery;
 using LifxNet;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -32,23 +32,22 @@ namespace LifxMvc.Services.UdpHelper
 
 		Task ListeningTask { get; set; }
 		ManualResetEventSlim StopListeningEvent { get; set; }
-		ManualResetEventSlim SuccessEvent { get; set; }
+		ManualResetEventSlim StopDiscoveryEvent { get; set; }
 		ManualResetEventSlim IsSafeToSendEvent { get; set; }
 
 		public event EventHandler<DiscoveryEventArgs> DeviceDiscovered;
-		HashSet<string> DiscoveryResponses { get; set; }
+		ConcurrentDictionary<string, int> DiscoveryResponses { get; set; }
 		DebugLogger Logger { get; set; }
 
 		public DiscoveryUdpHelper()
 		{
-			this.DiscoveryResponses = new HashSet<string>();
+			this.DiscoveryResponses = new ConcurrentDictionary<string, int>();
 			this.StopListeningEvent = new ManualResetEventSlim(false);
-			this.SuccessEvent = new ManualResetEventSlim(false);
+			this.StopDiscoveryEvent = new ManualResetEventSlim(false);
 			this.IsSafeToSendEvent = new ManualResetEventSlim(true);
 			this.Logger = new DebugLogger();
 		}
 
-		bool _discoveryComplete = false;
 		public void DiscoverBulbs(LifxPacketBase packet, int expectedCount, int timeout)
 		{
 			Logger.EnterMethod(MethodInfo.GetCurrentMethod(), "{0}", DateTime.Now.ToString("HH:mm:ss.ffff"));
@@ -59,7 +58,13 @@ namespace LifxMvc.Services.UdpHelper
 				this.DiscoverBulbsImpl(packet, ctx);
 
 				var timeoutEvent = new ManualResetEventSlim(false);
-				var waitHandles = new WaitHandle[] { timeoutEvent.WaitHandle, this.SuccessEvent.WaitHandle };
+
+				const int TIMEOUT_NDX = 0;
+				const int SUCCESS_NDX = 1;
+				var waitHandles = new WaitHandle[2];
+				waitHandles[TIMEOUT_NDX] = timeoutEvent.WaitHandle;
+				waitHandles[SUCCESS_NDX] = this.StopDiscoveryEvent.WaitHandle;
+
 				var which = int.MaxValue;
 				try
 				{
@@ -148,7 +153,6 @@ namespace LifxMvc.Services.UdpHelper
 			var listenCtx = ob as ListenContext;
 			int timeout = listenCtx.Timeout;
 			int expectedCount = listenCtx.ExpectedCount;
-			_discoveryComplete = false;
 
 			IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 
@@ -176,7 +180,7 @@ namespace LifxMvc.Services.UdpHelper
 								byte[] data = listener.EndReceive(asyncResult, ref sender);
 								//parse the response.
 								var response = ResponseFactory.Parse(data, sender);
-								response.TraceReceived(listener.Client.LocalEndPoint, _discoveryComplete);
+								response.TraceReceived(listener.Client.LocalEndPoint);
 
 								if (response is DeviceStateServiceResponse)
 								{
@@ -220,12 +224,14 @@ namespace LifxMvc.Services.UdpHelper
 			//publish the response.
 			if (null != this.DeviceDiscovered)
 			{
-				this.DiscoveryResponses.Add(ctx.Sender.ToString());
+				var sender = ctx.Sender.ToString();
+				Debug.Assert(!string.IsNullOrEmpty(sender));
+				this.DiscoveryResponses[sender] = 0;
 				this.DeviceDiscovered(this, new DiscoveryEventArgs(ctx));
 				if (ctx.CancelDiscovery)
-					_discoveryComplete = true;
-				if (this.DiscoveryResponses.Count == ctx.ExpectedCount)
-					this.SuccessEvent.Set();
+				{
+					this.StopDiscoveryEvent.Set();
+				}
 			}
 			Logger.ExitMethod(MethodInfo.GetCurrentMethod(), "{0}", DateTime.Now.ToString("HH:mm:ss.ffff"));
 		}

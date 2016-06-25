@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LifxMvc.Domain;
+﻿using LifxMvc.Domain;
 using LifxNet.Domain;
+using System;
 using System.Drawing;
 
 namespace LifxMvc.Services

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace Eric.Morrison.Logging
 {
-    public class DebugLogger
+	public class DebugLogger
     {
         /// <summary>
         /// Logs the entrance of the method referenced by the specified MethodBase.
